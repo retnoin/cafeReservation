@@ -106,7 +106,7 @@ class DaftarMeja extends Component {
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 onPress={() => this.props.navigation.navigate('detailMeja', { param: item.drinkId })}
-                                style={styles.cardmejapopular}>
+                                style={[styles.cardmejapopular, {paddingBottom: 15, paddingTop: 15}]}>
                                 <Image
                                     style={[styles.cardhomeimage, { marginLeft: 10, marginRight: 10 }]}
                                     source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
