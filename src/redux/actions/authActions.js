@@ -4,27 +4,28 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { base_url } from '../../utils/config';
 
 
-export const LoginAuth = (email, password) => {
+export const LoginAuth = (link, data) => {
     return ((dispatch) => {
         dispatch({
             type: AUTH_SERVICE.REQ_LOGIN_APPS
-        });                                                                                                              
-        console.log(email, password)
-        fetch(`${base_url}/login`, {
-            method: "POST",
+        });                    
+        fetch(`${base_url}${link}`, {
+            method: "post",
             headers: {
+                Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify(data)
         }).then((res) => res.json())
             .then((res) => {
-                console.info("RESPONSE :", res);
+                console.log("RESPONSE :", res.data);
                 if (res.status == 200) {
                     dispatch({
                         type: AUTH_SERVICE.SUCCES_LOGIN_APPS,
                         payload: "Indah BUll"
                     });
-                    AsyncStorage.setItem('user',res.email);
+                    console.log('BANKAI >> ',res.data[0]);
+                    AsyncStorage.setItem('user', JSON.stringify(res.data[0]));
                     ToastAndroid.show(res.message, ToastAndroid.SHORT)
                 } else {
                     dispatch({

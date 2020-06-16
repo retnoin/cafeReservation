@@ -6,6 +6,7 @@ import { LoaderModal } from '../../components/common/Loader';
 
 import { LoginAuth } from '../../redux/actions/authActions';
 import { bindActionCreators } from 'redux';
+import style from "./style";
 
 const { width, height } = Dimensions.get('screen');
 
@@ -16,7 +17,12 @@ class Login extends Component {
     }
 
     _onLogin = () => {
-        this.props.LoginAuth(this.state.username, this.state.password)
+        let link = 'user/login';
+        let data = {
+            name: this.state.username,
+            password: this.state.password
+        }
+        this.props.LoginAuth(link, data)
     }
 
     render() {
@@ -31,17 +37,19 @@ class Login extends Component {
                         <View style={{ alignItems: 'center' }}>
                             <Image
                                 source={require('../../assets/logo.png')}
-                                style={{ width: width / 2, height: width / 2 }}
+                                style={style.imgSize}
                             />
                         </View>
                         <TextInput
                             placeholder="username"
+                            placeholderTextColor="#fff"
                             onChangeText={(username) => this.setState({ username: username })}
                             style={style.textInput}
                             autoCapitalize={false}
                         />
                         <TextInput
-                            placeholder="passwod"
+                            placeholder="password"
+                            placeholderTextColor="#fff"
                             onChangeText={(passwod) => this.setState({ password: passwod })}
                             style={style.textInput}
                             autoCapitalize={false}
@@ -58,11 +66,11 @@ class Login extends Component {
                         bottom: 10,
                     }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text>Belum punya akun?</Text>
+                            <Text style={style.textWhite}>Belum punya akun?</Text>
                             <TouchableOpacity
-                            // onPress={() => this.props.navigation.navigate('register')}
+                            onPress={() => this.props.navigation.navigate('register')}
                             >
-                                <Text>daftar disin</Text>
+                                <Text style={style.textWhite}> Daftar disini</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -87,26 +95,4 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
-
-
-
-
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fde3a7',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    containerLogin: {
-        width: width - 40,
-        // backgroundColor: 'blue'
-    },
-    textInput: {
-        marginVertical: 20,
-        padding: 15,
-        borderWidth: 0.5,
-        borderRadius: 10
-    }
-})
 

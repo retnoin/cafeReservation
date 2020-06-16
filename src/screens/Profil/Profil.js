@@ -17,20 +17,32 @@ class Profil extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nama: null,
-            isLoading: false,
+            nama: '',
             email: '',
+            phone: '',
+            address: '',
+            dateOfBirth: '',
+            gender: '',
+            isLoading: false,
+
         };
     }
 
     componentDidMount = async () => {
         const store = await userStore();
-        this.setState({ nama: "indah" });
-        console.log(this.state.nama);
         var user = await AsyncStorage.getItem("user");
-        console.log(user);
+        var obj = JSON.parse(user);
+        console.log('Test >> ',JSON.parse(user));
         let email = store.user;
-        this.setState({ email: email });
+        this.setState(
+            {
+                name: obj.name, 
+                email: obj.email,
+                phone: obj.phone,
+                dateOfBirth: obj.dateOfBirth,
+                gender: obj.gender,
+            }
+        );
     }
 
     onLogout = () => {
@@ -65,13 +77,13 @@ class Profil extends Component {
                             />
                         </View>
 
-                        <Text style={{ color: "#fff" }}>{this.state.nama}</Text>
+                        <Text style={{ color: "#fff" }}>{this.state.name}</Text>
                     </View>
                 </ImageBackground>
                 <View style={{ marginHorizontal: 20, marginTop: 10 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>Nama</Text>
-                        <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>Indah</Text>
+                        <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>{this.state.name}</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>E-mail</Text>
@@ -79,11 +91,11 @@ class Profil extends Component {
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>No Tlpn</Text>
-                        <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>0000000</Text>
+                        <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>{this.state.phone}</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>Alamat</Text>
-                        <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>Yogyakarta</Text>
+                        <Text style={{ paddingVertical: 10, fontWeight: "600", fontSize: 16 }}>-</Text>
                     </View>
                 </View>
                 <View style={{ position: "absolute", bottom: 10, width: width }}>

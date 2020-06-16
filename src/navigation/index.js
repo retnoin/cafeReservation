@@ -129,6 +129,7 @@ const authStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen name="auth" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="register" component={Register} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }
