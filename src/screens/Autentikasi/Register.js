@@ -21,6 +21,7 @@ class Register extends Component {
     _onLogin(){
         let param = {
             link: 'user/add',
+            method: 'post',
             data: {
                 name: this.state.name,
                 email: this.state.email,

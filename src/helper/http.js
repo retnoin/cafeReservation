@@ -5,7 +5,7 @@ export function post (param: Object) {
         let full_url = API;
         if(!param.link){
             if(!param.custom_link){
-                reject({ message: 'Ops: Somthing error' });
+                reject({ message: 'Ops: Something error' });
             }else{
                 full_url = param.custom_link;
             }
@@ -13,18 +13,20 @@ export function post (param: Object) {
             full_url += param.link;
         }
 
-        console.log('API URL >> ', full_url);
+        if(param.method == ''){
+            reject({message: 'Ops: method not found'});
+        }
+        
         var header = {
-            method: 'post',
+            method: param.method,
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         }
         var request = Object.assign({
-            body: JSON.stringify(param.data)
+            body: param.data != '' ? JSON.stringify(param.data) : '' 
         }, header);
-        
         fetch(full_url, request)
         .then((response) => {
             if(response.status == 200){
