@@ -49,7 +49,7 @@ class DaftarMeja extends Component {
                     data={this.state.dataItem}
                     renderItem={({ item}) => (
                         <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate('detailMeja')}
+                            onPress={() => this.props.navigation.navigate('detailMeja', {param: item.foodId})}
                             style={styles.cardmejapopular}>
                             <Image
                                 style={[styles.cardhomeimage, {marginLeft: 10, marginRight: 10}]}
