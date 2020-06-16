@@ -1,5 +1,5 @@
 export function formatMoney(angka='10000', prefix ='Rp. '){
-    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+    var number_string = angka.toString().replace(/[^,\d]/g, '').toString(),
         split = number_string.split(','),
         sisa = split[0].length % 3,
         rupiah = split[0].substr(0, sisa),
