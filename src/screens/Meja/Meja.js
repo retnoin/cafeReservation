@@ -104,7 +104,7 @@ class Meja extends Component {
                 <View style={{ marginHorizontal: 5 }}>
                     <TouchableOpacity style={{
                         height: 40, width: 40, borderRadius: 25,
-                        backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
+                        backgroundColor: this.state.countPeople == i ? '#CCC' : '#FFF', alignItems: "center", justifyContent: "center"
                     }} onPress={() => this._selected({i}, 'people')}>
                         <Text style={{ color: "#000" }}>{i}</Text>
                     </TouchableOpacity>
@@ -123,7 +123,7 @@ class Meja extends Component {
                 <TouchableOpacity
                     style={{
                         borderColor: "grey", borderWidth: 2,
-                        paddingVertical: 1.5, paddingHorizontal: 5
+                        paddingVertical: 1.5, paddingHorizontal: 5, backgroundColor: this.state.timeOrder == i ? '#CCC' : '#FFF'
                     }} onPress={() => this._selected({ i }, 'time')}>
                     <Text>{i}</Text>
                 </TouchableOpacity>
@@ -140,7 +140,7 @@ class Meja extends Component {
                 <View style={{ marginHorizontal: 5 }}>
                     <TouchableOpacity style={{
                         height: 40, width: 40, borderRadius: 25,
-                        backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
+                        backgroundColor: this.state.meja == i ? "#CCC" : "#fff", alignItems: "center", justifyContent: "center"
                     }} onPress={() => this._selected({i}, 'meja')}>
                         <Text style={{ color: "#000" }}>{i}</Text>
                     </TouchableOpacity>
