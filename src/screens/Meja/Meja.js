@@ -5,7 +5,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLOR } from '../../components/common/color';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
-import 'moment/locale/id'
+import 'moment/locale/id';
+import * as Http from "../../helper/http";
 
 const { width, height } = Dimensions.get("screen")
 
@@ -13,8 +14,14 @@ class Meja extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            meja: '',
+            countPeople: '',
+            timeOrder: '',
             tanggal: 'Pilih Tanggal',
-            isDatePickerVisible: false
+            isDatePickerVisible: false,
+            numberPeople: 10,
+            numberTable: 10,
+            timeAvailable: ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30']
         };
     }
 
@@ -34,9 +41,133 @@ class Meja extends Component {
         this.hideDatePicker();
     };
 
+    getListTable(){
+        let reqParam = {
+            link: 'table/list',
+            method: 'post',
+            data: ''
+        }
+        Http.post(reqParam)
+        .then((res) => {
+            console.log('BAKA >> ', res);
+        })
+        .catch((err) => {
+
+        });
+    }
+
+    addToOrder() {
+        let reqParam = {
+            link: 'order/add',
+            method: 'post',
+            data: {
+                tableId: '',
+                foodId: this.props.route.params.param,
+                drinkId: '',
+                totalPrices: ''
+            }
+        }
+        Http.post(reqParam)
+            .then((res) => {
+                console.log('BAKA >> ', res);
+            })
+            .catch((err) => {
+
+            });
+    }
+
+    _selected(val, type){
+        console.log('TES >> ', type);
+        if(type == 'meja'){
+            this.setState({
+                meja: val.i
+            });
+        }
+
+        if(type == 'people'){
+            this.setState({
+                countPeople: val.i
+            });
+        }
+
+        if (type == 'time') {
+            this.setState({
+                timeOrder: val.i
+            });
+        }
+    }
+
+    _renderNumberPeople() {
+        let component = [];
+        for (let i = 1; i <= this.state.numberPeople; i++) {
+            let data = (
+                <View style={{ marginHorizontal: 5 }}>
+                    <TouchableOpacity style={{
+                        height: 40, width: 40, borderRadius: 25,
+                        backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
+                    }} onPress={() => this._selected({i}, 'people')}>
+                        <Text style={{ color: "#000" }}>{i}</Text>
+                    </TouchableOpacity>
+                </View>
+                );
+            component.push(data);
+        }
+
+        return component;
+    }
+
+    _renderTimeAvailable(){
+        let component = [];
+        this.state.timeAvailable.map((i) => {
+            component.push(<View style={{ marginHorizontal: 5 }}>
+                <TouchableOpacity
+                    style={{
+                        borderColor: "grey", borderWidth: 2,
+                        paddingVertical: 1.5, paddingHorizontal: 5
+                    }} onPress={() => this._selected({ i }, 'time')}>
+                    <Text>{i}</Text>
+                </TouchableOpacity>
+            </View>)
+        });
+
+        return component;
+    }
+
+    _renderTable(){
+        let component = [];
+        for (let i = 1; i <= this.state.numberTable; i++) {
+            let data = (
+                <View style={{ marginHorizontal: 5 }}>
+                    <TouchableOpacity style={{
+                        height: 40, width: 40, borderRadius: 25,
+                        backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
+                    }} onPress={() => this._selected({i}, 'meja')}>
+                        <Text style={{ color: "#000" }}>{i}</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+            component.push(data);
+        }
+
+        return component;
+    }
+
+    _redirectToPage(){
+        let {meja, countPeople, timeOrder, tanggal} = this.state;
+        let data = {};
+        data.meja= meja;
+        data.countPeople= countPeople;
+        data.timeOrder= timeOrder;
+        console.log('AHO >> ', typeof data);
+        if (meja == '' || countPeople == '' || timeOrder == '' || tanggal == 'Pilih Tanggal'){
+            alert('Please entry form order');
+        }else{
+            this.props.navigation.navigate('pesan', data);
+        }
+    }
 
     render() {
-        console.log(this.state.isDatePickerVisible)
+        console.log('AHO >> ', this.props.route.params.param);
         return (
             <ScrollView>
                 <View style={{ flex: 1 }}>
@@ -47,78 +178,21 @@ class Meja extends Component {
                             <ScrollView
                                 showsHorizontalScrollIndicator={false}
                                 horizontal>
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>1</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>2</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>3</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>4</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#000", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#fff" }}>5</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>6</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>7</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>8</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>9</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity style={{
-                                    height: 40, width: 40, borderRadius: 25,
-                                    backgroundColor: "#fff", alignItems: "center", justifyContent: "center"
-                                }}>
-                                    <Text style={{ color: "#000" }}>10</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
+                                {this._renderNumberPeople()}
                             </ScrollView>
                         </View>
+
+                        <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Pilih Meja</Text>
+                        <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
+                        <View style={{ flexDirection: "row" }}>
+                            <ScrollView
+                                showsHorizontalScrollIndicator={false}
+                                horizontal>
+                                {this._renderTable()}
+                            </ScrollView>
+                        </View>
+
                         <View style={{
                             borderBottomWidth: 2, borderBottomColor: "#dedede",
                             marginTop: 15, marginBottom: 10
@@ -140,66 +214,11 @@ class Meja extends Component {
                                     style={{ paddingHorizontal: 10 }} />
                             </TouchableOpacity>
                         </View>
-                        <View style={{ paddingVertical: 20 }} />
+                        <View style={{ paddingVertical: 10 }} />
                         <Text style={{ fontSize: 14, fontWeight: "bold", marginBottom: 15 }}>Pilih Jam</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "grey", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>12.00</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "grey", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>12.30</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "grey", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>13.00</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "#000", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>13.30</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "#000", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>14.00</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "#000", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>14.30</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
-                                <TouchableOpacity
-                                    style={{
-                                        borderColor: "#000", borderWidth: 2,
-                                        paddingVertical: 1.5, paddingHorizontal: 5
-                                    }}>
-                                    <Text>15.00</Text>
-                                </TouchableOpacity>
-                                <View style={{ marginHorizontal: 5 }} />
+                                {this._renderTimeAvailable()}
                             </View>
                         </ScrollView>
                     </View>
@@ -213,12 +232,12 @@ class Meja extends Component {
                             <View style={{ width: 100, height: 100, backgroundColor: "blue" }} />
                             <View style={{ paddingHorizontal: 10 }}>
                                 <Text style={{ fontSize: 16 }}>Jumlah kursi 4</Text>
-                                <Text style={{ fontSize: 16, marginVertical: 5 }}>Meja 5</Text>
+                                <Text style={{ fontSize: 16, marginVertical: 5 }}>Meja {this.state.meja}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                                         <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
                                         <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
-                                            <Text>14.30</Text>
+                                            <Text>{this.state.timeOrder}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -234,7 +253,7 @@ class Meja extends Component {
                                         style={{
                                             paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
                                             borderRadius: 5
-                                        }}>7</Text>
+                                        }}>{this.state.countPeople}</Text>
                                 </View>
                             </View>
                         </View>
@@ -246,7 +265,7 @@ class Meja extends Component {
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                             <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text>
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('pesan')}
+                                onPress={() => this._redirectToPage()}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                                     alignItems: "center"
