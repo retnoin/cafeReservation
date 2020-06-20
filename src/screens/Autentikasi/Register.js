@@ -45,42 +45,42 @@ class Register extends Component {
             <SafeAreaView style={{ flex: 1 }}>
                 {(this.props.loadingLogin) && <LoaderModal title="Loging In.." />}
                 <ImageBackground
-                    source={require('../../assets/bg.jpeg')}
+                    //source={require('../../assets/bg.jpeg')}
                     style={style.container} >
                     <View style={style.containerLogin}>
                         {/* <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center' }}>LOGIN</Text> */}
                         <View style={{ alignItems: 'center' }}>
                             <Image
-                                source={require('../../assets/logo.png')}
+                                source={require('../../assets/aalem.png')}
                                 style={style.imgSize}
                             />
-                            <Text style={{fontSize: 28, color: '#FFF'}}>Register</Text>
+                            <Text style={{fontSize: 28, color: '#8b5824'}}>Register</Text>
                         </View>
 
                         <TextInput
                             placeholder="name"
-                            placeholderTextColor="#fff"
+                            placeholderTextColor="#8b5824"
                             onChangeText={(name) => this.setState({ name: name })}
                             style={style.textInput}
                             autoCapitalize={false}
                         />
                         <TextInput
                             placeholder="email"
-                            placeholderTextColor="#fff"
+                            placeholderTextColor="#8b5824"
                             onChangeText={(email) => this.setState({ email: email })}
                             style={style.textInput}
                             autoCapitalize={false}
                         />
                         <TextInput
                             placeholder="phone"
-                            placeholderTextColor="#fff"
+                            placeholderTextColor="#8b5824"
                             onChangeText={(phone) => this.setState({ phone: phone })}
                             style={style.textInput}
                             autoCapitalize={false}
                         />
                         <TextInput
                             placeholder="password"
-                            placeholderTextColor="#fff"
+                            placeholderTextColor="#8b5824"
                             onChangeText={(password) => this.setState({ password: password })}
                             style={style.textInput}
                             autoCapitalize={false}

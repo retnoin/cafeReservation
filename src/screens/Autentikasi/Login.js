@@ -30,26 +30,26 @@ class Login extends Component {
             <SafeAreaView style={{ flex: 1 }}>
                 {(this.props.loadingLogin) && <LoaderModal title="Loging In.." />}
                 <ImageBackground
-                    source={require('../../assets/bg.jpeg')}
+                    //source={require('../../assets/bg.jpeg')}
                     style={style.container} >
                     <View style={style.containerLogin}>
                         {/* <Text style={{ fontSize: 25, fontWeight: 'bold', textAlign: 'center' }}>LOGIN</Text> */}
                         <View style={{ alignItems: 'center' }}>
                             <Image
-                                source={require('../../assets/logo.png')}
+                                source={require('../../assets/aalem.png')}
                                 style={style.imgSize}
                             />
                         </View>
                         <TextInput
                             placeholder="username"
-                            placeholderTextColor="#fff"
+                            placeholderTextColor="##8b5824"
                             onChangeText={(username) => this.setState({ username: username })}
                             style={style.textInput}
                             autoCapitalize={false}
                         />
                         <TextInput
                             placeholder="password"
-                            placeholderTextColor="#fff"
+                            placeholderTextColor="#8b5824"
                             onChangeText={(passwod) => this.setState({ password: passwod })}
                             style={style.textInput}
                             autoCapitalize={false}
@@ -63,8 +63,9 @@ class Login extends Component {
                     </View>
                     <View style={{
                         position: 'absolute',
-                        bottom: 10,
+                        bottom: 20,
                     }}>
+                        <View style={{marginBottom: 10,marginTop: 20, borderBottomWidth: 2, borderBottomColor: "#8b582424", width: "100%"}}/>
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={style.textWhite}>Belum punya akun?</Text>
                             <TouchableOpacity

@@ -5,10 +5,10 @@ import { COLOR } from '../../components/common/color';
 class SplashScreen extends Component {
     render() {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fcebae' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#f0f0e5" }}>
                 <Image
-                    style={{ width: width / 1.5, height: width / 1.5 }}
-                    source={require('../../assets/splash.png')}
+                    style={{ width: width / 4, height: width / 4 }}
+                    source={require('../../assets/aalem.png')}
                 />
                 <View style={{ position: 'absolute', bottom: 10 }}>
                     <ActivityIndicator color={COLOR.primary_color} size='large' />

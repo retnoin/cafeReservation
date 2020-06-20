@@ -101,7 +101,7 @@ class Profil extends Component {
                 <View style={{ position: "absolute", bottom: 10, width: width }}>
                     <ButtonTouch
                         onPress={this.onLogout}
-                        label="Logout CUK"
+                        label="Logout"
                         color={COLOR.primary_color}
 
                     />
