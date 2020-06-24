@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Login from '../screens/Autentikasi/Login'
 import Register from '../screens/Autentikasi/Register'
 import keranjang from '../screens/Keranjang/Keranjang';
-import {ceksession} from '../redux/actions/authActions';
+import { ceksession } from '../redux/actions/authActions';
 
 import { COLOR } from '../components/common/color';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -55,6 +55,15 @@ const HomeStack = () => {
             />
             <Stack.Screen
                 name="detailProduk" component={DetailProduk}
+                options={{
+                    headerTitle: "Menu",
+                    headerTitleStyle: {
+                        color: COLOR.primary_color
+                    },
+                    headerStyle: {
+                        backgroundColor: COLOR.secondary_color
+                    }
+                }}
             />
         </Stack.Navigator>
 
@@ -213,11 +222,11 @@ const mapStateTopProps = (state) => ({
     user: state.authReducer.user
 });
 
-const mapDispatchToProps=(dispatch)=>{
+const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
         ceksession
-    },dispatch);
+    }, dispatch);
 }
 
 
-export default connect(mapStateTopProps,mapDispatchToProps)(MainNavigation);
+export default connect(mapStateTopProps, mapDispatchToProps)(MainNavigation);

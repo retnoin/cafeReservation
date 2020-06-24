@@ -27,7 +27,8 @@ const style = StyleSheet.create({
     },
     imgSize: {
         width: width / 6,
-        height: width / 6
+        height: width / 6,
+        marginBottom: 15
     },
     textWhite:{
         color: '#8b5824'
