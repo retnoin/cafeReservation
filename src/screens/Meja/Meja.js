@@ -7,6 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import 'moment/locale/id';
 import * as Http from "../../helper/http";
+import AsyncStorage from '@react-native-community/async-storage';
 
 const { width, height } = Dimensions.get("screen")
 
@@ -14,6 +15,7 @@ class Meja extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userId: '',
             meja: '',
             countPeople: '',
             timeOrder: '',
@@ -80,13 +82,17 @@ class Meja extends Component {
             alert('Ops: something error');
         });
     }
-
+    componentDidMount = async () => {
+        var user = await AsyncStorage.getItem("user");
+        this.setState({userId: user.userId});
+    }
     addToOrder(param) {
         let reqParam = {
             link: 'order/add',
             method: 'post',
             data: {
                 tableId: param,
+                userId: this.state.userId,
                 foodId: '',
                 drinkId: '',
                 totalPrices: ''
@@ -280,7 +286,7 @@ class Meja extends Component {
                         <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" }}>
                             {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
                             <TouchableOpacity
-                                onPress={() => this.addToTable()}
+                                onPress={() => this.props.navigation.navigate('Menu')}//this.addToTable()}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                                     alignSelf: 'flex-end'

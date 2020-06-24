@@ -110,9 +110,9 @@ const MejaStack = () => {
                 }}
             />
             <Stack.Screen
-                name="pesan" component={Pesan}
+                name="payment" component={Pesan}
                 options={{
-                    headerTitle: "Pesan",
+                    headerTitle: "Payment",
                     headerTitleStyle: {
                         color: COLOR.primary_color
                     },

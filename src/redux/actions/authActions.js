@@ -20,13 +20,21 @@ export const LoginAuth = (link, data) => {
             .then((res) => {
                 console.log("RESPONSE :", res.data);
                 if (res.status == 200) {
-                    dispatch({
-                        type: AUTH_SERVICE.SUCCES_LOGIN_APPS,
-                        payload: "Indah BUll"
-                    });
                     console.log('BANKAI >> ',res.data[0]);
-                    AsyncStorage.setItem('user', JSON.stringify(res.data[0]));
-                    ToastAndroid.show(res.message, ToastAndroid.SHORT)
+                    if(res.data == ''){
+                        dispatch({
+                            type: AUTH_SERVICE.FAILED_LOGIN_APPS,
+                            payload: "Indah BUll"
+                        });
+                        alert('Failed login');
+                    }else{
+                        dispatch({
+                            type: AUTH_SERVICE.SUCCES_LOGIN_APPS,
+                            payload: "Indah BUll"
+                        });
+                        AsyncStorage.setItem('user', JSON.stringify(res.data[0]));
+                        ToastAndroid.show(res.message, ToastAndroid.SHORT)
+                    }
                 } else {
                     dispatch({
                         type: AUTH_SERVICE.FAILED_LOGIN_APPS,
