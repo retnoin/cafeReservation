@@ -84,7 +84,8 @@ class Meja extends Component {
     }
     componentDidMount = async () => {
         var user = await AsyncStorage.getItem("user");
-        this.setState({userId: user.userId});
+        var dataUser = JSON.parse(user);
+        this.setState({userId: dataUser.userId});
     }
     addToOrder(param) {
         let reqParam = {
@@ -286,7 +287,7 @@ class Meja extends Component {
                         <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" }}>
                             {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Menu')}//this.addToTable()}
+                                onPress={() => this.addToTable()}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                                     alignSelf: 'flex-end'
