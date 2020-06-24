@@ -101,6 +101,7 @@ const MejaStack = () => {
                 name="Menu" component={DaftarMeja}
                 options={{
                     headerTitle: "Menu Cafe",
+                    // headerLeft: null,
                     headerTitleStyle: {
                         color: COLOR.primary_color
                     },
@@ -113,6 +114,7 @@ const MejaStack = () => {
                 name="payment" component={Pesan}
                 options={{
                     headerTitle: "Payment",
+                    headerLeft: null,
                     headerTitleStyle: {
                         color: COLOR.primary_color
                     },
