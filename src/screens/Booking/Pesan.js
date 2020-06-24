@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import styles from '../../components/common/styles';
+import * as Http from "../../helper/http";
+import * as Hooks from "../../helper/hooks";
 
 class Pesan extends Component {
   constructor(props) {
@@ -8,10 +11,16 @@ class Pesan extends Component {
     };
   }
 
+  componentDidMount(){
+    console.log(this.props.route.params.dataOrder);
+  }
+
   render() {
     return (
-      <View>
-        <Text> Pesan </Text>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={{fontWeight: 'bold'}}>Kode Order: {this.props.route.params.orderId}</Text>
+        <Text>Silahkan bayar sebelum waktunya habis</Text>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('homemain')}></TouchableOpacity>
       </View>
     );
   }
