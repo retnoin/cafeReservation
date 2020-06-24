@@ -90,23 +90,23 @@ const BookingStack = () => {
 const MejaStack = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen
-                name="daftarMeja" component={DaftarMeja}
+            <Stack.Screen name="Daftar" component={Meja}
                 options={{
-                    headerTitle: "Daftar Meja",
+                    headerTitle: "Choose Table",
+                    headerTitleStyle: { color: COLOR.primary_color },
+                    headerStyle: { backgroundColor: COLOR.secondary_color }
+                }}
+            />
+            <Stack.Screen
+                name="Menu" component={DaftarMeja}
+                options={{
+                    headerTitle: "Menu Cafe",
                     headerTitleStyle: {
                         color: COLOR.primary_color
                     },
                     headerStyle: {
                         backgroundColor: COLOR.secondary_color
                     }
-                }}
-            />
-            <Stack.Screen name="detailMeja" component={Meja}
-                options={{
-                    headerTitle: "Detail Meja",
-                    headerTitleStyle: { color: COLOR.primary_color },
-                    headerStyle: { backgroundColor: COLOR.secondary_color }
                 }}
             />
             <Stack.Screen

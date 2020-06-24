@@ -56,23 +56,52 @@ class Meja extends Component {
         });
     }
 
-    addToOrder() {
+    addToTable() {
+        let { meja, countPeople, timeOrder, tanggal } = this.state;
+        if (meja == '' || countPeople == '' || timeOrder == '' || tanggal == 'Pilih Tanggal') {
+            return alert('Please entry form order');
+        }
+
+        let reqParam = {
+            link: 'table/add',
+            method: 'post',
+            data: {
+                numberOfTable: this.state.meja,
+                type: 'normal',
+                manyOfSeats: this.state.countPeople,
+                availableTime: this.state.tanggal+' '+this.state.timeOrder
+            }
+        }
+        Http.post(reqParam)
+        .then((response) => {
+            console.log(response);
+            this.addToOrder(response.data.tableId);
+        }).catch(err => {
+            alert('Ops: something error');
+        });
+    }
+
+    addToOrder(param) {
         let reqParam = {
             link: 'order/add',
             method: 'post',
             data: {
-                tableId: '',
-                foodId: this.props.route.params.param,
+                tableId: param,
+                foodId: '',
                 drinkId: '',
                 totalPrices: ''
             }
         }
         Http.post(reqParam)
             .then((res) => {
-                console.log('BAKA >> ', res);
+                let data = {
+                    tableId: param,
+                    orderId: res.data.orderId
+                }
+                this.props.navigation.navigate('Menu', data);
             })
             .catch((err) => {
-
+                alert('Ops: something error');
             });
     }
 
@@ -152,22 +181,8 @@ class Meja extends Component {
         return component;
     }
 
-    _redirectToPage(){
-        let {meja, countPeople, timeOrder, tanggal} = this.state;
-        let data = {};
-        data.meja= meja;
-        data.countPeople= countPeople;
-        data.timeOrder= timeOrder;
-        console.log('AHO >> ', typeof data);
-        if (meja == '' || countPeople == '' || timeOrder == '' || tanggal == 'Pilih Tanggal'){
-            alert('Please entry form order');
-        }else{
-            this.props.navigation.navigate('pesan', data);
-        }
-    }
-
     render() {
-        console.log('AHO >> ', this.props.route.params.param);
+        // console.log('AHO >> ', this.props.route.params.param);
         return (
             <ScrollView>
                 <View style={{ flex: 1 }}>
@@ -262,15 +277,15 @@ class Meja extends Component {
                             marginTop: 10, marginBottom: 10, borderBottomWidth: 2,
                             borderBottomColor: "#dedede", width: "100%"
                         }} />
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text>
+                        <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                            {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
                             <TouchableOpacity
-                                onPress={() => this._redirectToPage()}
+                                onPress={() => this.addToTable()}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-                                    alignItems: "center"
+                                    alignSelf: 'flex-end'
                                 }}>
-                                <Text style={{ color: COLOR.white }}>Pesan</Text>
+                                <Text style={{ color: COLOR.white }}>Booking Table</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
