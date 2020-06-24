@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { ingredients } from '../../service/dataArrays';
+import { COLOR } from '../../components/common/color';
 import styles from '../../components/common/styles';
 import * as Http from "../../helper/http";
 import * as Hooks from "../../helper/hooks";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 // import {  } from 'react-native-gesture-handler';
 
 class DaftarMeja extends Component {
@@ -92,9 +95,11 @@ class DaftarMeja extends Component {
     _ChooseMenu(param, type){
         let price = [];
         price.push({price: param.price});
-        if(type="makanan"){
+        if(type=="makanan"){
+            console.log(type);
             this.setState({ foodId: param.foodId, dataPrice: price})
         }else{
+            console.log(type);
             this.setState({ drinkId: param.drinkId, dataPrice: price})
         }
     }
@@ -102,6 +107,17 @@ class DaftarMeja extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end", margin: 10 }}>
+                    {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
+                    <TouchableOpacity
+                        onPress={() => alert('oke')}
+                        style={{
+                            padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+                            alignSelf: 'flex-end'
+                        }}>
+                        <Text style={{ color: COLOR.white }}>Order Now</Text>
+                    </TouchableOpacity>
+                </View>
                 <ScrollView>
                 <View style={{ margin: 15 }}>
                     <Text style={{ fontSize: 20, textAlign: "left" }}>Menu Food</Text>
@@ -118,8 +134,8 @@ class DaftarMeja extends Component {
                                     source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
                                 />
                                 <View style={{ paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-                                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{Hooks.formatMoney(item.price)}</Text>
+                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name} {this.state.foodId == item.foodId ? <MaterialIcons name="check" size={25} color="#089e0f" /> : ''}</Text>
+                                <Text style={{ fontSize: 16, fontWeight: '500' }}>{Hooks.formatMoney(item.price)}</Text>
                                 </View>
                             </TouchableOpacity>
                         )}
@@ -142,7 +158,7 @@ class DaftarMeja extends Component {
                                     source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
                                 />
                                 <View style={{ paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
+                                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name} {this.state.drinkId == item.drinkId ? <MaterialIcons name="check" size={25} color="#089e0f" /> : ''}</Text>
                                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{Hooks.formatMoney(item.price)}</Text>
                                 </View>
                             </TouchableOpacity>
