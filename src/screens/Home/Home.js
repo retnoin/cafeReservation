@@ -80,9 +80,10 @@ class Home extends Component {
         })
     }
 
-    goDetailProduk = (item) => {
+    goDetailProduk = (item, category) => {
         this.props.navigation.navigate('detailProduk', {
-            data: item
+            data: item,
+            category: category
         })
     }
 
@@ -172,6 +173,7 @@ class Home extends Component {
                         {
                             this.state.populerDrink.map((item, key) => (
                                 <TouchableOpacity
+                                    onPress={() => this.goDetailProduk(item, 'drink')}
                                     key={key}
                                     style={styles.cardhomepopular}>
                                     <Image
@@ -196,7 +198,7 @@ class Home extends Component {
                         {
                             this.state.populerMenu.map((item, key) => (
                                 <TouchableOpacity
-                                    onPress={() => this.goDetailProduk(item)}
+                                    onPress={() => this.goDetailProduk(item, 'food')}
                                     key={key}
                                     style={styles.cardhomepopular}>
                                     <Image
