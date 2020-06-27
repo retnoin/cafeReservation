@@ -287,7 +287,7 @@ class Meja extends Component {
                         <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" }}>
                             {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
                             <TouchableOpacity
-                                onPress={() => this.addToTable()}
+                                onPress={() => this.addToTable()}//this.props.navigation.navigate('Menu')}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                                     alignSelf: 'flex-end'
