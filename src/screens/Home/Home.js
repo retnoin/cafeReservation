@@ -4,6 +4,8 @@ import { View, Text, Dimensions, Image, ScrollView, TouchableOpacity } from 'rea
 import { COLOR } from '../../components/common/color';
 import { categories, ingredients } from '../../service/dataArrays';
 import { FAB } from 'react-native-paper';
+import * as Http from "../../helper/http";
+import * as Hooks from "../../helper/hooks";
 
 const { width, height } = Dimensions.get("screen")
 
@@ -12,6 +14,8 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            populerDrink: [],
+            populerMenu: [],
             currentIndex: 0,
             imgDate: [
                 "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80",
@@ -27,6 +31,8 @@ class Home extends Component {
     }
     componentDidMount() {
         this.carousel()
+        this.getPopulerMenu();
+        this.getPopulerDrink();
     }
 
     dotClick(index) {
@@ -80,6 +86,46 @@ class Home extends Component {
         })
     }
 
+    getPopulerMenu() {
+        let reqParam = {
+            link: 'food/populer',
+            method: 'get',
+            data: '',
+        }
+
+        Http.post(reqParam)
+        .then((res) => {
+            console.log('BAKA >> ', res);
+            let response = res.data;
+            this.setState({
+                populerMenu: response
+            });
+        })
+        .catch((err) => {
+
+        });
+    }
+
+    getPopulerDrink(){
+        let reqParam = {
+            link: 'drink/populer',
+            method: 'get',
+            data: '',
+        }
+
+        Http.post(reqParam)
+        .then((res) => {
+            console.log('BAKA >> ', res);
+            let response = res.data;
+            this.setState({
+                populerDrink: response
+            });
+        })
+        .catch((err) => {
+
+        });
+    }
+
 
     render() {
         const { imgDate, currentIndex } = this.state;
@@ -118,17 +164,17 @@ class Home extends Component {
                         showsHorizontalScrollIndicator={false}
                         horizontal>
                         {
-                            categories.map((item, key) => (
+                            this.state.populerDrink.map((item, key) => (
                                 <TouchableOpacity
                                     key={key}
                                     style={styles.cardhomepopular}>
                                     <Image
                                         style={styles.cardhomeimage}
-                                        source={{ uri: item.photo_url }}
+                                        source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
                                     />
                                     <View style={{ paddingLeft: 10 }}>
                                         <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-                                        <Text style={{ fontSize: 16, fontWeight: '500' }}>{item.harga}</Text>
+                                        <Text style={{ fontSize: 16, fontWeight: '500' }}>{Hooks.formatMoney(item.price)}</Text>
                                     </View>
                                 </TouchableOpacity>
                             ))
@@ -142,18 +188,18 @@ class Home extends Component {
                         showsHorizontalScrollIndicator={false}
                         horizontal>
                         {
-                            ingredients.map((item, key) => (
+                            this.state.populerMenu.map((item, key) => (
                                 <TouchableOpacity
                                     onPress={() => this.goDetailProduk(item)}
                                     key={key}
                                     style={styles.cardhomepopular}>
                                     <Image
                                         style={styles.cardhomeimage}
-                                        source={{ uri: item.photo_url }}
+                                        source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
                                     />
                                     <View style={{ paddingLeft: 10 }}>
                                         <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
-                                        <Text style={{ fontSize: 16, fontWeight: '500' }}>{item.harga}</Text>
+                                        <Text style={{ fontSize: 16, fontWeight: '500' }}>{Hooks.formatMoney(item.price)}</Text>
                                     </View>
                                 </TouchableOpacity>
                             ))
