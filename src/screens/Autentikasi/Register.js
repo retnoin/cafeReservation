@@ -14,11 +14,11 @@ class Register extends Component {
         // this._onLogin.bind(this) = this._onLogin();
     }
 
-    componentWillMount(){
+    componentWillMount() {
         // http.post('tes', 'baka','hello');
     }
 
-    _onLogin(){
+    _onLogin() {
         let param = {
             link: 'user/add',
             method: 'post',
@@ -31,13 +31,13 @@ class Register extends Component {
         }
 
         Http.post(param)
-        .then((res) => {
-            alert('Daftar berhasil');
-            this.props.navigation.navigate('auth');
-        })
-        .catch((err) => {
-            console.log('Erro');
-        });
+            .then((res) => {
+                alert('Daftar berhasil');
+                this.props.navigation.navigate('auth');
+            })
+            .catch((err) => {
+                console.log('Erro');
+            });
     }
 
     render() {
@@ -54,7 +54,11 @@ class Register extends Component {
                                 source={require('../../assets/aalem.png')}
                                 style={style.imgSize}
                             />
-                            <Text style={{fontSize: 28, color: '#8b5824'}}>Register</Text>
+                            <Text style={{ fontSize: 25, color: '#8b5824', paddingTop: 20 }}>Register</Text>
+                            <View style={{
+                                marginBottom: 20, marginTop: 10, borderBottomWidth: 2, borderBottomColor: "#8b582424", width: "25%"
+                            }} />
+                            <View style={{ flexDirection: 'row' }}></View>
                         </View>
 
                         <TextInput
