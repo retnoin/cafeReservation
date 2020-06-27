@@ -97,6 +97,9 @@ class Home extends Component {
         .then((res) => {
             console.log('BAKA >> ', res);
             let response = res.data;
+
+            //Limit data
+            response.length = 5;
             this.setState({
                 populerMenu: response
             });
@@ -117,6 +120,9 @@ class Home extends Component {
         .then((res) => {
             console.log('BAKA >> ', res);
             let response = res.data;
+
+            //Limit data
+            response.length = 5;
             this.setState({
                 populerDrink: response
             });
