@@ -4,6 +4,10 @@ import {COLOR} from '../../components/common/color'
 import ButtonTouch from '../../components/common/Button'
 import { ScrollView } from 'react-native-gesture-handler'
 
+import { addToCart } from '../../redux/actions/authActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import * as Http from "../../helper/http";
 import * as Hooks from "../../helper/hooks";
 
@@ -13,13 +17,13 @@ export class DetailProduk extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: ''
+            data: '',
+            cart: ''
         }
     }
 
     componentDidMount() {
         let {category, data} = this.props.route.params;
-        console.log('BAKA >>', data);
         if(category == 'drink'){
             this.setState({
                 data: data
@@ -31,10 +35,10 @@ export class DetailProduk extends Component {
         }
     }
 
-    _addToCart(){
-        alert('oke');
+    _addToCart(item){
+        this.props.addToCart(item);
+        this.props.navigation.navigate('keranjang');
     }
-
 
     _renderMenu(){
         let {data} = this.props.route.params;
@@ -122,4 +126,16 @@ export class DetailProduk extends Component {
     }
 }
 
-export default DetailProduk
+const mapStateToProps = (state) => {
+    return {
+        cart: state.cart,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        addToCart,
+    }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailProduk);

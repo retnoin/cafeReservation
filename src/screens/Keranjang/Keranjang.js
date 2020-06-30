@@ -4,13 +4,99 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLOR } from '../../components/common/color';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { ScrollView } from 'react-native-gesture-handler';
-import NumericInput from 'react-native-numeric-input'
+import NumericInput from 'react-native-numeric-input';
+
+import { addToCart } from '../../redux/actions/authActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import * as Http from "../../helper/http";
+import * as Hooks from "../../helper/hooks";
 
 class Keranjang extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
+    }
+
+    componentDidMount(){
+        console.log('PAGE CART', this.props.cart);
+    }
+
+    _renderOrderTable(){
+        let component;
+        component = (
+            <View>
+                <View style={{ flexDirection: "row" }}>
+                    <View style={{ width: 120, height: 120, backgroundColor: "red" }} />
+                    <View style={{ paddingHorizontal: 10 }}>
+                        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Meja 10</Text>
+                        <View style={{
+                            borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5,
+                            marginBottom: 5, width: "70%"
+                        }} />
+                        <Text style={{ fontSize: 16 }}>Jumlah kursi 4</Text>
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
+                                <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
+                                    <Text>00.00</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Fontisto name="date" color={COLOR.primary_color} size={20} />
+                            <Text style={{ paddingHorizontal: 10 }}>22/6/2020</Text>
+                        </View>
+                        <View style={{ marginTop: 5 }} />
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <MaterialIcons name="person-outline" color={COLOR.primary_color} size={25} />
+                            <View style={{ marginHorizontal: 5 }} />
+                            <Text style={{
+                                paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
+                                borderRadius: 5
+                            }}>0</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={{ paddingVertical: 10 }} />
+                <View style={{
+                    marginTop: 5, marginBottom: 5, borderBottomWidth: 2,
+                    borderBottomColor: "#dedede", width: "100%"
+                }} />
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <Text style={{ fontSize: 16 }}>Harga</Text>
+                    <Text style={{ fontSize: 16 }}>Rp 50.000</Text>
+                </View>
+            </View>
+        )
+        return component;
+    }
+
+    _renderOrder(){
+        let component = [];
+        this.props.cart.map((item, i) => {
+            component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
+                <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
+                <View style={{ paddingHorizontal: 10 }}>
+                    <Text>{item.name}</Text>
+                    <Text style={{ marginBottom: 14 }}>{Hooks.formatMoney(item.price)}</Text>
+                    <NumericInput value={this.state.value}
+                        onChange={value => this.setState({ value })}
+                        minValue={1}
+                        totalWidth={100}
+                        totalHeight={30}
+                        valueType='real'
+                        rounded
+                        textColor={COLOR.primary_color}
+                        iconStyle={{ color: 'white' }}
+                        rightButtonBackgroundColor={COLOR.primary_color}
+                        leftButtonBackgroundColor={COLOR.primary_color} />
+                </View>
+            </View>)
+        });
+        return component;
     }
 
     render() {
@@ -20,47 +106,7 @@ class Keranjang extends Component {
                     backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
                     borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
                 }}>
-                    <View style={{ flexDirection: "row" }}>
-                        <View style={{ width: 120, height: 120, backgroundColor: "red" }} />
-                        <View style={{ paddingHorizontal: 10 }}>
-                            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Meja 10</Text>
-                            <View style={{
-                                borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5,
-                                marginBottom: 5, width: "70%"
-                            }} />
-                            <Text style={{ fontSize: 16 }}>Jumlah kursi 4</Text>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
-                                    <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
-                                        <Text>00.00</Text>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Fontisto name="date" color={COLOR.primary_color} size={20} />
-                                <Text style={{ paddingHorizontal: 10 }}>22/6/2020</Text>
-                            </View>
-                            <View style={{ marginTop: 5 }} />
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialIcons name="person-outline" color={COLOR.primary_color} size={25} />
-                                <View style={{ marginHorizontal: 5 }} />
-                                <Text style={{
-                                    paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
-                                    borderRadius: 5
-                                }}>0</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={{ paddingVertical: 10 }} />
-                    <View style={{
-                        marginTop: 5, marginBottom: 5, borderBottomWidth: 2,
-                        borderBottomColor: "#dedede", width: "100%"
-                    }} />
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Text style={{ fontSize: 16 }}>Harga</Text>
-                        <Text style={{ fontSize: 16 }}>Rp 50.000</Text>
-                    </View>
+                    {this._renderOrderTable()}
                 </View>
                 <View style={{
                     backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
@@ -75,42 +121,9 @@ class Keranjang extends Component {
                         marginTop: 5, marginBottom: 10, width: "100%",
                         borderBottomWidth: 2, borderBottomColor: "#dedede"
                     }} />
-                    <View style={{ flexDirection: "row", marginBottom: 15 }}>
-                        <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
-                        <View style={{ paddingHorizontal: 10 }}>
-                            <Text>Marie Cookies</Text>
-                            <Text style={{ marginBottom: 14 }}>Rp 23.000</Text>
-                            <NumericInput value={this.state.value}
-                                onChange={value => this.setState({ value })}
-                                minValue={1}
-                                totalWidth={100}
-                                totalHeight={30}
-                                valueType='real'
-                                rounded
-                                textColor={COLOR.primary_color}
-                                iconStyle={{ color: 'white' }}
-                                rightButtonBackgroundColor={COLOR.primary_color}
-                                leftButtonBackgroundColor={COLOR.primary_color} />
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: "row", marginBottom: 15 }}>
-                        <View style={{ width: 80, height: 80, backgroundColor: "brown" }} />
-                        <View style={{ paddingHorizontal: 10 }}>
-                            <Text>Tropical Coffe</Text>
-                            <Text style={{ marginBottom: 14 }}>Rp 25.000</Text>
-                            <NumericInput value={this.state.value}
-                                onChange={value => this.setState({ value })}
-                                minValue={1}
-                                totalWidth={100}
-                                totalHeight={30}
-                                valueType='real'
-                                rounded
-                                textColor={COLOR.primary_color}
-                                iconStyle={{ color: 'white' }}
-                                rightButtonBackgroundColor={COLOR.primary_color}
-                                leftButtonBackgroundColor={COLOR.primary_color} />
-                        </View>
-                    </View>
+
+                    {this._renderOrder()}
+                
                 </View>
                 <View style={{
                     backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
@@ -162,4 +175,14 @@ class Keranjang extends Component {
     }
 }
 
-export default Keranjang;
+const mapStateToProps = (state) => {
+    return {
+        cart: state.authReducer.cartList
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({ addToCart}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Keranjang);
