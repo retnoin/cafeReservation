@@ -24,7 +24,8 @@ class KodeBooking extends Component {
                                 <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
                             </View>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('detailBooking')}>
                             <View style={{ paddingVertical: 10, backgroundColor: COLOR.secondary_color, marginHorizontal: 10 }}>
                                 <Text style={{ marginHorizontal: 10 }}>Pembayaran anda telah dikonfirmasi, lihat kode reservasi anda</Text>
                             </View>

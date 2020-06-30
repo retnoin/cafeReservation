@@ -15,16 +15,27 @@ class Detailbooking extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <view style={{ width: width, justifyContent: "center", alignItems: "center" }}>
-                    <view style={{ padding: 10, borderRadius: 20, borderWidth: 2, borderColor: "#000", marginTop: 10 }}>
-                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>Booking Meja</Text>
-                    </view>
-                </view>
-                <View style={{ marginHorizontal: 20, marginTop: 20 }}>
-
+            <ScrollView>
+                <View style={{
+                    backgroundColor: "#fff", marginTop: 20, marginHorizontal: 10,
+                    borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10,
+                    marginBottom: 20
+                }}>
+                    <View>
+                        <Text style={{ fontSize: 20}}>Kode Reservasi : </Text>
+                        <View style={{ width: width, alignItems: "baseline" }}>
+                            <View style={{
+                                padding: 20, borderRadius: 20, borderWidth: 3,
+                                borderColor: COLOR.primary_color, marginTop: 20, marginBottom: 20 }}>
+                                <Text style={{ fontSize: 30, fontWeight: "bold" }}>JK98123456</Text>
+                            </View>
+                        </View>
+                        <Text style={{ fontSize: 19}}>Terimakasih telah melakukan reservasi{"\n"}
+            Selanjutnya tunjukkan kode ini kepada Server kami.</Text>
+                    </View>
+                    <Text style={{ fontSize: 19, marginTop: 5, marginBottom:5 }}>Sampai jumpa di cafe !</Text>
                 </View>
-            </View>
+            </ScrollView>
         )
     }
 }
