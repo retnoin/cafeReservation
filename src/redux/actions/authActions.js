@@ -18,9 +18,7 @@ export const LoginAuth = (link, data) => {
             body: JSON.stringify(data)
         }).then((res) => res.json())
             .then((res) => {
-                console.log("RESPONSE :", res.data);
                 if (res.status == 200) {
-                    console.log('BANKAI >> ',res.data[0]);
                     if(res.data == ''){
                         dispatch({
                             type: AUTH_SERVICE.FAILED_LOGIN_APPS,
@@ -47,6 +45,16 @@ export const LoginAuth = (link, data) => {
                 });
                 Alert.alert('Gagal', "Waktu Request Habis.")
             })
+    })
+}
+
+export const addToCart = (item) => {
+    return ((dispatch) => {
+        dispatch({
+            type: AUTH_SERVICE.ADD_CART,
+            cartList: item
+        });
+        console.log('BAKA AKA >>', dispatch);
     })
 }
 

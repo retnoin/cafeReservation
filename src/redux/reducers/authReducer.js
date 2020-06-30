@@ -4,7 +4,8 @@ const initialState = {
     loading: false,
     user: undefined,
     success: false,
-    failed: false
+    failed: false,
+    cartList: []
 }
 
 const {
@@ -12,10 +13,16 @@ const {
     SUCCES_LOGIN_APPS,
     FAILED_LOGIN_APPS,
     LOGOUT_USER,
+    ADD_CART
 } = AUTH_SERVICE;
 
 export const authReducer = (state = initialState, actions) => {
     switch (actions.type) {
+        case ADD_CART:
+            return {
+                ...state,
+                cartList: state.cartList.concat(actions.cartList)
+            }
         case REQ_LOGIN_APPS:
             return {
                 ...state,
