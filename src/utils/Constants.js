@@ -7,4 +7,5 @@ export const AUTH_SERVICE = {
     REQ_SESSION: "REQ_SESSION",
 
     LOGOUT_USER:"LOGOUT USER",
+    ADD_CART: "CART",
 }
