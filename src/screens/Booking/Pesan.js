@@ -15,7 +15,7 @@ class Pesan extends Component {
   }
 
   componentDidMount(){
-    console.log(this.props.route.params.dataOrder);
+    // console.log(this.props.route.params.dataOrder);
   }
 
   render() {

@@ -73,25 +73,6 @@ class DaftarMeja extends Component {
         });
     }
 
-    updateToOrder(){
-        let orderId = this.props.route.params.orderId;
-        let reqParam = {
-            link: 'order/update/'+orderId,
-            method: 'post',
-            data: {
-                foodId: this.state.foodId,
-                drinkId: this.state.drinkId,
-                totalPrices: ''
-            }
-        }
-
-        Http.post(reqParam).then((res) => {
-            console.log('HANABI >> ', res);
-        }).catch(err => {
-            alert('Ops: something error');
-        });
-    }
-
     _ChooseMenu(param, type){
         let price = [];
         price.push({price: param.price});
@@ -104,20 +85,16 @@ class DaftarMeja extends Component {
         }
     }
 
+    goDetailProduk = (item, category) => {
+        this.props.navigation.navigate('detailProduk', {
+            data: item,
+            category: category
+        })
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end", margin: 10 }}>
-                    {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
-                    <TouchableOpacity
-                        onPress={() => alert('oke')}
-                        style={{
-                            padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-                            alignSelf: 'flex-end'
-                        }}>
-                        <Text style={{ color: COLOR.white }}>Order Now</Text>
-                    </TouchableOpacity>
-                </View>
                 <ScrollView>
                 <View style={{ margin: 15 }}>
                     <Text style={{ fontSize: 20, textAlign: "left" }}>Menu Food</Text>
@@ -127,7 +104,7 @@ class DaftarMeja extends Component {
                     data={this.state.dataItem}
                     renderItem={({ item }) => (
                             <TouchableOpacity
-                            onPress={() => this._ChooseMenu(item, 'makanan')}
+                            onPress={() => this.goDetailProduk(item, 'makanan')}
                                 style={styles.cardmejapopular}>
                                 <Image
                                     style={[styles.cardhomeimage, { marginLeft: 10, marginRight: 10 }]}
@@ -151,7 +128,7 @@ class DaftarMeja extends Component {
                         data={this.state.dataDrink}
                         renderItem={({ item }) => (
                             <TouchableOpacity
-                                onPress={() => this._ChooseMenu(item, 'drink')}
+                                onPress={() => this.goDetailProduk(item, 'drink')}
                                 style={[styles.cardmejapopular, {paddingBottom: 15, paddingTop: 15}]}>
                                 <Image
                                     style={[styles.cardhomeimage, { marginLeft: 10, marginRight: 10 }]}

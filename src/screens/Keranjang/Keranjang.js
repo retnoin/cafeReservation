@@ -6,7 +6,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { ScrollView } from 'react-native-gesture-handler';
 import NumericInput from 'react-native-numeric-input';
 
-import { addToCart } from '../../redux/actions/authActions';
+import { addToCart, addTableToCart } from '../../redux/actions/authActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -21,61 +21,70 @@ class Keranjang extends Component {
     }
 
     componentDidMount(){
+        console.log('PAGE TABLE', this.props.table);
         console.log('PAGE CART', this.props.cart);
     }
 
     _renderOrderTable(){
-        let component;
-        component = (
-            <View>
-                <View style={{ flexDirection: "row" }}>
-                    <View style={{ width: 120, height: 120, backgroundColor: "red" }} />
-                    <View style={{ paddingHorizontal: 10 }}>
-                        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Meja 10</Text>
-                        <View style={{
-                            borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5,
-                            marginBottom: 5, width: "70%"
-                        }} />
-                        <Text style={{ fontSize: 16 }}>Jumlah kursi 4</Text>
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        let component = [];
+        if(this.props.table == ''){
+            return console.log('empty data table');
+        }
+        this.props.table.map((table, i) => {
+            component.push(
+                <View>
+                    <View style={{ flexDirection: "row" }}>
+                        <View style={{ width: 120, height: 120, backgroundColor: "red" }} />
+                        <View style={{ paddingHorizontal: 10 }}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Meja {table.meja}</Text>
+                            <View style={{
+                                borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5,
+                                marginBottom: 5, width: "70%"
+                            }} />
+                            <Text style={{ fontSize: 16 }}>Jumlah kursi 4</Text>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
-                                <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
-                                    <Text>00.00</Text>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
+                                    <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
+                                        <Text>{table.timeOrder}</Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Fontisto name="date" color={COLOR.primary_color} size={20} />
-                            <Text style={{ paddingHorizontal: 10 }}>22/6/2020</Text>
-                        </View>
-                        <View style={{ marginTop: 5 }} />
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <MaterialIcons name="person-outline" color={COLOR.primary_color} size={25} />
-                            <View style={{ marginHorizontal: 5 }} />
-                            <Text style={{
-                                paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
-                                borderRadius: 5
-                            }}>0</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Fontisto name="date" color={COLOR.primary_color} size={20} />
+                                <Text style={{ paddingHorizontal: 10 }}>{table.tanggal}</Text>
+                            </View>
+                            <View style={{ marginTop: 5 }} />
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <MaterialIcons name="person-outline" color={COLOR.primary_color} size={25} />
+                                <View style={{ marginHorizontal: 5 }} />
+                                <Text style={{
+                                    paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
+                                    borderRadius: 5
+                                }}>{table.countPeople}</Text>
+                            </View>
                         </View>
                     </View>
+                    <View style={{ paddingVertical: 10 }} />
+                    <View style={{
+                        marginTop: 5, marginBottom: 5, borderBottomWidth: 2,
+                        borderBottomColor: "#dedede", width: "100%"
+                    }} />
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                        <Text style={{ fontSize: 16 }}>Harga</Text>
+                        <Text style={{ fontSize: 16 }}>Rp 50.000</Text>
+                    </View>
                 </View>
-                <View style={{ paddingVertical: 10 }} />
-                <View style={{
-                    marginTop: 5, marginBottom: 5, borderBottomWidth: 2,
-                    borderBottomColor: "#dedede", width: "100%"
-                }} />
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                    <Text style={{ fontSize: 16 }}>Harga</Text>
-                    <Text style={{ fontSize: 16 }}>Rp 50.000</Text>
-                </View>
-            </View>
-        )
+            );
+        });
         return component;
     }
 
     _renderOrder(){
         let component = [];
+        if(this.props.cart == ''){
+            return console.log('empty data order');
+        }
         this.props.cart.map((item, i) => {
             component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
                 <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
@@ -177,12 +186,13 @@ class Keranjang extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        cart: state.authReducer.cartList
+        cart: state.authReducer.cartList,
+        table: state.authReducer.tableList
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ addToCart}, dispatch)
+    return bindActionCreators({ addToCart, addTableToCart}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Keranjang);

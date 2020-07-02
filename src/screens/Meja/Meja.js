@@ -9,6 +9,10 @@ import 'moment/locale/id';
 import * as Http from "../../helper/http";
 import AsyncStorage from '@react-native-community/async-storage';
 
+import { addTableToCart } from '../../redux/actions/authActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 const { width, height } = Dimensions.get("screen")
 
 class Meja extends Component {
@@ -58,58 +62,10 @@ class Meja extends Component {
         });
     }
 
-    addToTable() {
-        let { meja, countPeople, timeOrder, tanggal } = this.state;
-        if (meja == '' || countPeople == '' || timeOrder == '' || tanggal == 'Pilih Tanggal') {
-            return alert('Please entry form order');
-        }
-
-        let reqParam = {
-            link: 'table/add',
-            method: 'post',
-            data: {
-                numberOfTable: this.state.meja,
-                type: 'normal',
-                manyOfSeats: this.state.countPeople,
-                availableTime: this.state.tanggal+' '+this.state.timeOrder
-            }
-        }
-        Http.post(reqParam)
-        .then((response) => {
-            console.log(response);
-            this.addToOrder(response.data.tableId);
-        }).catch(err => {
-            alert('Ops: something error');
-        });
-    }
     componentDidMount = async () => {
         var user = await AsyncStorage.getItem("user");
         var dataUser = JSON.parse(user);
         this.setState({userId: dataUser.userId});
-    }
-    addToOrder(param) {
-        let reqParam = {
-            link: 'order/add',
-            method: 'post',
-            data: {
-                tableId: param,
-                userId: this.state.userId,
-                foodId: '',
-                drinkId: '',
-                totalPrices: ''
-            }
-        }
-        Http.post(reqParam)
-            .then((res) => {
-                let data = {
-                    tableId: param,
-                    orderId: res.data.orderId
-                }
-                this.props.navigation.navigate('Menu', data);
-            })
-            .catch((err) => {
-                alert('Ops: something error');
-            });
     }
 
     _selected(val, type){
@@ -131,6 +87,31 @@ class Meja extends Component {
                 timeOrder: val.i
             });
         }
+    }
+
+    _saveToCart(){
+        let {meja, countPeople, timeOrder, tanggal} = this.state;
+        if(meja == ''){
+            return alert('Meja field is required');
+        }
+        if(timeOrder == ''){
+            return alert('Time field is required');
+        }
+        if(countPeople == ''){
+            return alert('Total people field is required');
+        }
+        if(tanggal == 'Pilih Tanggal'){
+            return alert('Date field is required');
+        }
+
+        let table = {
+            meja : meja,
+            timeOrder: timeOrder,
+            tanggal: tanggal,
+            countPeople: countPeople
+        }
+        this.props.addTableToCart(table);
+        this.props.navigation.navigate('Menu');
     }
 
     _renderNumberPeople() {
@@ -287,7 +268,7 @@ class Meja extends Component {
                         <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" }}>
                             {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
                             <TouchableOpacity
-                                onPress={() => this.addToTable()}//this.props.navigation.navigate('Menu')}
+                                onPress={() => this._saveToCart()}//this.props.navigation.navigate('Menu')}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                                     alignSelf: 'flex-end'
@@ -312,4 +293,16 @@ class Meja extends Component {
     }
 }
 
-export default Meja;
+const mapStateToProps = (state) => {
+    return {
+        table: state.tableList
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        addTableToCart,
+    }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Meja);

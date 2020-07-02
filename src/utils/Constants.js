@@ -8,4 +8,5 @@ export const AUTH_SERVICE = {
 
     LOGOUT_USER:"LOGOUT USER",
     ADD_CART: "CART",
+    ADD_TABLE_TOCART: "CART_TABLE_ADD",
 }

@@ -54,7 +54,15 @@ export const addToCart = (item) => {
             type: AUTH_SERVICE.ADD_CART,
             cartList: item
         });
-        console.log('BAKA AKA >>', dispatch);
+    })
+}
+
+export const addTableToCart = (table) => {
+    return ((dispatch) => {
+        dispatch({
+            type: AUTH_SERVICE.ADD_TABLE_TOCART,
+            tableList: table
+        });
     })
 }
 
