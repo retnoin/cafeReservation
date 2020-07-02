@@ -17,6 +17,7 @@ class Keranjang extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            value: 1
         };
     }
 
