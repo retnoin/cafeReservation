@@ -108,7 +108,8 @@ class Meja extends Component {
             meja : meja,
             timeOrder: timeOrder,
             tanggal: tanggal,
-            countPeople: countPeople
+            countPeople: countPeople,
+            price: 50000
         }
         this.props.addTableToCart(table);
         this.props.navigation.navigate('Menu');
