@@ -21,7 +21,7 @@ class Pesan extends Component {
   }
 
   getOrder(){
-    let orderId =  this.props.route.params.orderId;
+    let orderId = this.props.route.params.orderId;
     if(orderId != ''){
       let reqParam = {
         link: 'order/orderbyuser',
