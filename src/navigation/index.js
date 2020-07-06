@@ -65,6 +65,19 @@ const HomeStack = () => {
                     }
                 }}
             />
+            <Stack.Screen
+                name="payment" component={Pesan}
+                options={{
+                    headerTitle: "Payment",
+                    headerLeft: null,
+                    headerTitleStyle: {
+                        color: COLOR.primary_color
+                    },
+                    headerStyle: {
+                        backgroundColor: COLOR.secondary_color
+                    }
+                }}
+            />
         </Stack.Navigator>
 
     )
@@ -111,19 +124,6 @@ const MejaStack = () => {
                 options={{
                     headerTitle: "Menu Cafe",
                     // headerLeft: null,
-                    headerTitleStyle: {
-                        color: COLOR.primary_color
-                    },
-                    headerStyle: {
-                        backgroundColor: COLOR.secondary_color
-                    }
-                }}
-            />
-            <Stack.Screen
-                name="payment" component={Pesan}
-                options={{
-                    headerTitle: "Payment",
-                    headerLeft: null,
                     headerTitleStyle: {
                         color: COLOR.primary_color
                     },
@@ -185,6 +185,7 @@ export const MainTabs = () => {
                         <MaterialIcons name="person" size={25} color={color} />
                     )
                 }} />
+                
         </Tabs.Navigator>
     )
 }
