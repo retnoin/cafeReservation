@@ -25,9 +25,10 @@ class Meja extends Component {
             timeOrder: '',
             tanggal: 'Pilih Tanggal',
             isDatePickerVisible: false,
-            numberPeople: 10,
-            numberTable: 10,
-            timeAvailable: ['12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30']
+            numberPeople: [],
+            numberTable: [],
+            timeAvailable: [],
+            data: []
         };
     }
 
@@ -50,12 +51,15 @@ class Meja extends Component {
     getListTable(){
         let reqParam = {
             link: 'table/list',
-            method: 'post',
+            method: 'get',
             data: ''
         }
         Http.post(reqParam)
         .then((res) => {
-            console.log('BAKA >> ', res);
+            let data = res.data;
+            this.setState({ data: data});
+            // data.map((item, i) => {
+            // });
         })
         .catch((err) => {
 
@@ -66,25 +70,25 @@ class Meja extends Component {
         var user = await AsyncStorage.getItem("user");
         var dataUser = JSON.parse(user);
         this.setState({userId: dataUser.userId});
+        this.getListTable();
     }
 
     _selected(val, type){
-        console.log('TES >> ', type);
         if(type == 'meja'){
             this.setState({
-                meja: val.i
+                meja: val.meja
             });
         }
 
         if(type == 'people'){
             this.setState({
-                countPeople: val.i
+                countPeople: val.people
             });
         }
 
         if (type == 'time') {
             this.setState({
-                timeOrder: val.i
+                timeOrder: val.timeOrder
             });
         }
     }
@@ -117,33 +121,36 @@ class Meja extends Component {
 
     _renderNumberPeople() {
         let component = [];
-        for (let i = 1; i <= this.state.numberPeople; i++) {
+        this.state.data.sort(function (a, b) { return a.manyOfSeats - b.manyOfSeats });
+        this.state.data.map((item, i) => {
+            let people = item.manyOfSeats;
             let data = (
                 <View style={{ marginHorizontal: 5 }}>
                     <TouchableOpacity style={{
                         height: 40, width: 40, borderRadius: 25,
-                        backgroundColor: this.state.countPeople == i ? '#CCC' : '#FFF', alignItems: "center", justifyContent: "center"
-                    }} onPress={() => this._selected({i}, 'people')}>
-                        <Text style={{ color: "#000" }}>{i}</Text>
+                        backgroundColor: this.state.countPeople == item.manyOfSeats ? '#CCC' : '#FFF', alignItems: "center", justifyContent: "center"
+                    }} onPress={() => this._selected({ people }, 'people')}>
+                        <Text style={{ color: "#000" }}>{item.manyOfSeats}</Text>
                     </TouchableOpacity>
                 </View>
-                );
+            );
             component.push(data);
-        }
+        });
 
         return component;
     }
 
     _renderTimeAvailable(){
         let component = [];
-        this.state.timeAvailable.map((i) => {
+        this.state.data.map((item, i) => {
+            let timeOrder = item.avalaibleTime;
             component.push(<View style={{ marginHorizontal: 5 }}>
                 <TouchableOpacity
                     style={{
                         borderColor: "grey", borderWidth: 2,
-                        paddingVertical: 1.5, paddingHorizontal: 5, backgroundColor: this.state.timeOrder == i ? '#CCC' : '#FFF'
-                    }} onPress={() => this._selected({ i }, 'time')}>
-                    <Text>{i}</Text>
+                        paddingVertical: 1.5, paddingHorizontal: 5, backgroundColor: this.state.timeOrder == item.avalaibleTime ? '#CCC' : '#FFF'
+                    }} onPress={() => this._selected({ timeOrder }, 'time')}>
+                    <Text>{item.avalaibleTime}</Text>
                 </TouchableOpacity>
             </View>)
         });
@@ -153,19 +160,20 @@ class Meja extends Component {
 
     _renderTable(){
         let component = [];
-        for (let i = 1; i <= this.state.numberTable; i++) {
+        this.state.data.map((item, i) => {
+            let meja = item.numberOfTable;
             let data = (
                 <View style={{ marginHorizontal: 5 }}>
                     <TouchableOpacity style={{
                         height: 40, width: 40, borderRadius: 25,
-                        backgroundColor: this.state.meja == i ? "#CCC" : "#fff", alignItems: "center", justifyContent: "center"
-                    }} onPress={() => this._selected({i}, 'meja')}>
-                        <Text style={{ color: "#000" }}>{i}</Text>
+                        backgroundColor: this.state.meja == item.numberOfTable ? "#CCC" : "#fff", alignItems: "center", justifyContent: "center"
+                    }} onPress={() => this._selected({ meja }, 'meja')}>
+                        <Text style={{ color: "#000" }}>{item.numberOfTable}</Text>
                     </TouchableOpacity>
                 </View>
             );
             component.push(data);
-        }
+        });
 
         return component;
     }
