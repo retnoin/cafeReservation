@@ -71,7 +71,7 @@ class Keranjang extends Component {
             this.saveOrderFood(orderId);
             this.saveOrderTable(orderId);
             this.saveOrderDrink(orderId);
-            this.props.navigation.navigate('payment', { orderId: orderId});
+            this.props.navigation.navigate('payment',{orderId: orderId});
         }).catch((err) => {
             console.log('Error');
         });
