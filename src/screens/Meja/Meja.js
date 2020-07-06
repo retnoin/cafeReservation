@@ -21,6 +21,7 @@ class Meja extends Component {
         this.state = {
             userId: '',
             meja: '',
+            tableId: '',
             countPeople: '',
             timeOrder: '',
             tanggal: 'Pilih Tanggal',
@@ -74,9 +75,11 @@ class Meja extends Component {
     }
 
     _selected(val, type){
+        console.log('BAKA >>', val.item.tableId);
         if(type == 'meja'){
             this.setState({
-                meja: val.meja
+                meja: val.item.numberOfTable,
+                tableId: val.item.tableId
             });
         }
 
@@ -94,7 +97,7 @@ class Meja extends Component {
     }
 
     _saveToCart(){
-        let {meja, countPeople, timeOrder, tanggal} = this.state;
+        let {meja, countPeople, timeOrder, tanggal, tableId} = this.state;
         if(meja == ''){
             return alert('Meja field is required');
         }
@@ -110,6 +113,7 @@ class Meja extends Component {
 
         let table = {
             meja : meja,
+            tableId: tableId,
             timeOrder: timeOrder,
             tanggal: tanggal,
             countPeople: countPeople,
@@ -161,13 +165,12 @@ class Meja extends Component {
     _renderTable(){
         let component = [];
         this.state.data.map((item, i) => {
-            let meja = item.numberOfTable;
             let data = (
                 <View style={{ marginHorizontal: 5 }}>
                     <TouchableOpacity style={{
                         height: 40, width: 40, borderRadius: 25,
                         backgroundColor: this.state.meja == item.numberOfTable ? "#CCC" : "#fff", alignItems: "center", justifyContent: "center"
-                    }} onPress={() => this._selected({ meja }, 'meja')}>
+                    }} onPress={() => this._selected({ item }, 'meja')}>
                         <Text style={{ color: "#000" }}>{item.numberOfTable}</Text>
                     </TouchableOpacity>
                 </View>
