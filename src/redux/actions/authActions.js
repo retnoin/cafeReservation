@@ -48,11 +48,20 @@ export const LoginAuth = (link, data) => {
     })
 }
 
-export const addToCart = (item) => {
+export const addToFoodCart = (item) => {
     return ((dispatch) => {
         dispatch({
-            type: AUTH_SERVICE.ADD_CART,
-            cartList: item
+            type: AUTH_SERVICE.ADD_FOOD_CART,
+            cartFoodList: item
+        });
+    })
+}
+
+export const addToDrinkCart = (item) => {
+    return ((dispatch) => {
+        dispatch({
+            type: AUTH_SERVICE.ADD_DRINK_CART,
+            cartDrinkList: item
         });
     })
 }
