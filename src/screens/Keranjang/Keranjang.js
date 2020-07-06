@@ -17,7 +17,12 @@ class Keranjang extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 1
+            value: 1,
+            subTotal: 0,
+            subTotalMeja: 0,
+            subTotalItem: {data: []},
+            totalPayment: 0,
+            ppn: 2000,
         };
     }
 
@@ -31,7 +36,9 @@ class Keranjang extends Component {
         if(this.props.table == ''){
             return console.log('empty data table');
         }
+        let tes = 0;
         this.props.table.map((table, i) => {
+            tes += parseInt(table.price);
             component.push(
                 <View>
                     <View style={{ flexDirection: "row" }}>
@@ -78,6 +85,7 @@ class Keranjang extends Component {
                 </View>
             );
         });
+        this.state.subTotalItem.data.push(tes);
         return component;
     }
 
@@ -86,7 +94,9 @@ class Keranjang extends Component {
         if(this.props.cart == ''){
             return console.log('empty data order');
         }
+        let subItem = 0;
         this.props.cart.map((item, i) => {
+            subItem += parseInt(item.price) * parseInt(this.state.value);
             component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
                 <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
                 <View style={{ paddingHorizontal: 10 }}>
@@ -106,6 +116,61 @@ class Keranjang extends Component {
                 </View>
             </View>)
         });
+        this.state.subTotalItem.data.push(subItem);
+        return component;
+    }
+
+    _rendeDetailPayment(){
+        let total = 0;
+        this.state.subTotalItem.data.map((item, i) => {
+            total += parseInt(item);
+        });
+        let totalAll = total + 2000;
+        let component = (
+            <View>
+            <View style={{ flexDirection: "row" }}>
+                <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
+                    Detail Pembayaran
+                        </Text>
+            </View>
+            <View style={{
+                marginTop: 5, marginBottom: 10, width: "100%",
+                borderBottomWidth: 2, borderBottomColor: "#dedede"
+            }} />
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <Text style={{ fontSize: 16 }}>Sub Total</Text>
+                <Text style={{ fontSize: 16 }}>{total}</Text>
+            </View>
+            <View style={{
+                flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+                marginTop: 8
+            }}>
+                <Text style={{ fontSize: 16 }}>PPN</Text>
+                <Text style={{ fontSize: 16 }}>Rp 2.000</Text>
+            </View>
+            <View style={{
+                borderStyle: 'dotted',
+                borderWidth: 1,
+                borderRadius: 1,
+                marginTop: 8
+            }} />
+            <View style={{
+                flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+                marginTop: 8
+            }}>
+                <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
+                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
+            </View>
+            <TouchableOpacity
+                style={{
+                    padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+                    alignItems: "center", marginTop: 10
+                }}>
+                <Text style={{ color: COLOR.white }}>Pesan</Text>
+            </TouchableOpacity>
+            </View>
+        );
+        console.log('BAKA A A >>', this.state.subTotalItem);
         return component;
     }
 
@@ -139,45 +204,7 @@ class Keranjang extends Component {
                     backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
                     borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
                 }}>
-                    <View style={{ flexDirection: "row" }}>
-                        <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
-                            Detail Pembayaran
-                        </Text>
-                    </View>
-                    <View style={{
-                        marginTop: 5, marginBottom: 10, width: "100%",
-                        borderBottomWidth: 2, borderBottomColor: "#dedede"
-                    }} />
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Text style={{ fontSize: 16 }}>Sub Total</Text>
-                        <Text style={{ fontSize: 16 }}>Rp 98.000</Text>
-                    </View>
-                    <View style={{ 
-                        flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-                        marginTop : 8}}>
-                        <Text style={{ fontSize: 16 }}>PPN</Text>
-                        <Text style={{ fontSize: 16 }}>Rp 2.000</Text>
-                    </View>
-                    <View style={{
-                        borderStyle: 'dotted',
-                        borderWidth: 1,
-                        borderRadius: 1,
-                        marginTop : 8
-                    }} />
-                    <View style={{
-                        flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-                        marginTop: 8
-                    }}>
-                        <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
-                        <Text style={{ fontSize: 16 }}>Rp 100.000</Text>
-                    </View>
-                    <TouchableOpacity
-                        style={{
-                            padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-                            alignItems: "center", marginTop: 10
-                        }}>
-                        <Text style={{ color: COLOR.white }}>Pesan</Text>
-                    </TouchableOpacity>
+                    {this._rendeDetailPayment()}
                 </View>
 
             </ScrollView>
