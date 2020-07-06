@@ -4,7 +4,7 @@ import {COLOR} from '../../components/common/color'
 import ButtonTouch from '../../components/common/Button'
 import { ScrollView } from 'react-native-gesture-handler'
 
-import { addToCart } from '../../redux/actions/authActions';
+import { addToFoodCart, addToDrinkCart } from '../../redux/actions/authActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -35,8 +35,15 @@ export class DetailProduk extends Component {
         }
     }
 
-    _addToCart(item){
-        this.props.addToCart(item);
+    _addToFoodCart(item){
+        console.log('FOOD');
+        this.props.addToFoodCart(item);
+        this.props.navigation.navigate('keranjang');
+    }
+
+    _addToDrinkCart(item) {
+        console.log('DRINK');
+        this.props.addToDrinkCart(item);
         this.props.navigation.navigate('keranjang');
     }
 
@@ -68,7 +75,7 @@ export class DetailProduk extends Component {
             </ScrollView>
             <View style={{ position: "absolute", bottom: 10, width: width }}>
                 <ButtonTouch
-                    onPress = {() => this._addToCart(data)}
+                    onPress = {() => this._addToFoodCart(data)}
                     label="Tambah Pesanan"
                     color={COLOR.primary_color}
                 />
@@ -105,7 +112,7 @@ export class DetailProduk extends Component {
             </ScrollView>
             <View style={{ position: "absolute", bottom: 10, width: width }}>
                 <ButtonTouch
-                    onPress = {() => this._addToCart(data)}
+                    onPress = {() => this._addToDrinkCart(data)}
                     label="Tambah Pesanan"
                     color={COLOR.primary_color}
                 />
@@ -128,13 +135,13 @@ export class DetailProduk extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        cart: state.cart,
+        cartFood: state.cartFoodList,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({
-        addToCart,
+        addToFoodCart, addToDrinkCart,
     }, dispatch)
 }
 

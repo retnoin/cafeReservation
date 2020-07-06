@@ -6,7 +6,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { ScrollView } from 'react-native-gesture-handler';
 import NumericInput from 'react-native-numeric-input';
 
-import { addToCart, addTableToCart } from '../../redux/actions/authActions';
+import { addToFoodCart, addToDrinkCart, addTableToCart } from '../../redux/actions/authActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -28,7 +28,29 @@ class Keranjang extends Component {
 
     componentDidMount(){
         console.log('PAGE TABLE', this.props.table);
-        console.log('PAGE CART', this.props.cart);
+        console.log('PAGE CART FOOD', this.props.cartFood);
+        console.log('PAGE CART DRINK', this.props.cartDrink);
+        this.saveOrderItem();
+    }
+
+    saveOrderItem(){
+        let cartFood = this.props.cartFood;
+        cartFood.map((item, i) => {
+            let reqParam = {
+                link: 'order/add_item',
+                method: 'post',
+                data: {
+                    foodId: (item.foodId) ? item.foodId : 0
+                }
+            }
+
+            console.log('HEWLLO >>', reqParam);
+            // Http.post(reqParam).then((res) => {
+            //     console.log('TESTING >>',res);
+            // }).catch((err) => {
+            //     console.log('Error');
+            // });
+        });
     }
 
     _renderOrderTable(){
@@ -89,13 +111,44 @@ class Keranjang extends Component {
         return component;
     }
 
-    _renderOrder(){
+    _renderOrderFood(){
         let component = [];
-        if(this.props.cart == ''){
+        if(this.props.cartFood == ''){
             return console.log('empty data order');
         }
         let subItem = 0;
-        this.props.cart.map((item, i) => {
+        this.props.cartFood.map((item, i) => {
+            subItem += parseInt(item.price) * parseInt(this.state.value);
+            component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
+                <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
+                <View style={{ paddingHorizontal: 10 }}>
+                    <Text>{item.name}</Text>
+                    <Text style={{ marginBottom: 14 }}>{Hooks.formatMoney(item.price)}</Text>
+                    <NumericInput value={this.state.value}
+                        onChange={value => this.setState({ value })}
+                        minValue={1}
+                        totalWidth={100}
+                        totalHeight={30}
+                        valueType='real'
+                        rounded
+                        textColor={COLOR.primary_color}
+                        iconStyle={{ color: 'white' }}
+                        rightButtonBackgroundColor={COLOR.primary_color}
+                        leftButtonBackgroundColor={COLOR.primary_color} />
+                </View>
+            </View>)
+        });
+        this.state.subTotalItem.data.push(subItem);
+        return component;
+    }
+
+    _renderOrderDrink() {
+        let component = [];
+        if (this.props.cartDrink == '') {
+            return console.log('empty data order');
+        }
+        let subItem = 0;
+        this.props.cartDrink.map((item, i) => {
             subItem += parseInt(item.price) * parseInt(this.state.value);
             component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
                 <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
@@ -196,9 +249,8 @@ class Keranjang extends Component {
                         marginTop: 5, marginBottom: 10, width: "100%",
                         borderBottomWidth: 2, borderBottomColor: "#dedede"
                     }} />
-
-                    {this._renderOrder()}
-                
+                    {this._renderOrderFood()}
+                    {this._renderOrderDrink()}
                 </View>
                 <View style={{
                     backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
@@ -214,13 +266,14 @@ class Keranjang extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        cart: state.authReducer.cartList,
+        cartFood: state.authReducer.cartFoodList,
+        cartDrink: state.authReducer.cartDrinkList,
         table: state.authReducer.tableList
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ addToCart, addTableToCart}, dispatch)
+    return bindActionCreators({ addToFoodCart, addToDrinkCart, addTableToCart}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Keranjang);
