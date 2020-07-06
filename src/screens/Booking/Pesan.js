@@ -11,14 +11,39 @@ class Pesan extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      dataOrder: ''
     };
   }
 
   componentDidMount(){
     // console.log(this.props.route.params.dataOrder);
+    this.getOrder();
+  }
+
+  getOrder(){
+    let orderId =  this.props.route.params.orderId;
+    if(orderId != ''){
+      let reqParam = {
+        link: 'order/orderbyuser',
+        method: 'post',
+        data: {
+          orderId: orderId
+        }
+      }
+      Http.post(reqParam).then((res) => {
+        console.log('DATA >>', res.data);
+        this.setState({dataOrder: res.data[0]});
+      }).catch((err) => {
+        console.log('Error');
+      });
+    }else{
+      this.props.navigation.navigate('homemain');
+    }
   }
 
   render() {
+    let {dataOrder} = this.state;
+    let totalPayment = parseInt(dataOrder.totalPrices) + 2000;
     return (
       <ScrollView>
         <View style={{
@@ -53,7 +78,7 @@ class Pesan extends Component {
           }} />
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <Text style={{ fontSize: 16 }}>Sub Total</Text>
-            <Text style={{ fontSize: 16 }}>Rp 98.000</Text>
+            <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(dataOrder.totalPrices)}</Text>
           </View>
           <View style={{
             flexDirection: "row", alignItems: "center", justifyContent: "space-between",
@@ -73,7 +98,7 @@ class Pesan extends Component {
             marginTop: 8
           }}>
             <Text style={{ fontSize: 16, fontWeight: "700" }}>Total Pembayaran</Text>
-            <Text style={{ fontSize: 16, fontWeight: "700" }}>Rp 100.000</Text>
+            <Text style={{ fontSize: 16, fontWeight: "700" }}>{Hooks.formatMoney(totalPayment)}</Text>
           </View>
           <TouchableOpacity
             style={{
