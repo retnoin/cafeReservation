@@ -71,6 +71,7 @@ class Keranjang extends Component {
             this.saveOrderFood(orderId);
             this.saveOrderTable(orderId);
             this.saveOrderDrink(orderId);
+            this.props.navigation.navigate('payment', { orderId: orderId});
         }).catch((err) => {
             console.log('Error');
         });
@@ -278,7 +279,7 @@ class Keranjang extends Component {
         this.state.subTotalItem.data.map((item, i) => {
             total += parseInt(item);
         });
-        let totalAll = total + 2000;
+        // let totalAll = total + 2000;
 
         let component = (
             <View>
@@ -293,7 +294,7 @@ class Keranjang extends Component {
             }} />
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <Text style={{ fontSize: 16 }}>Sub Total</Text>
-                <Text style={{ fontSize: 16 }}>{total}</Text>
+                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(total)}</Text>
             </View>
             <View style={{
                 flexDirection: "row", alignItems: "center", justifyContent: "space-between",
@@ -313,10 +314,10 @@ class Keranjang extends Component {
                 marginTop: 8
             }}>
                 <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
-                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
+                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(total)}</Text>
             </View>
             <TouchableOpacity
-                onPress = {() => this.saveOrder(totalAll)}
+                onPress = {() => this.saveOrder(total)}
                 style={{
                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                     alignItems: "center", marginTop: 10
