@@ -18,7 +18,6 @@ class Keranjang extends Component {
         super(props);
         this.state = {
             value: 1,
-            subTotal: 0,
             subTotalMeja: 0,
             subTotalItem: {data: []},
             totalPayment: 0,
@@ -30,29 +29,130 @@ class Keranjang extends Component {
         console.log('PAGE TABLE', this.props.table);
         console.log('PAGE CART FOOD', this.props.cartFood);
         console.log('PAGE CART DRINK', this.props.cartDrink);
-        this.saveOrderItem();
     }
 
-    saveOrderItem(){
+    //Save Order Item
+    saveOrderItem(param){
         let cartFood = this.props.cartFood;
-        cartFood.map((item, i) => {
-            let reqParam = {
-                link: 'order/add_item',
-                method: 'post',
-                data: {
-                    foodId: (item.foodId) ? item.foodId : 0
-                }
-            }
+        let cartDrink = this.props.cartDrink;
 
-            console.log('HEWLLO >>', reqParam);
-            // Http.post(reqParam).then((res) => {
-            //     console.log('TESTING >>',res);
-            // }).catch((err) => {
-            //     console.log('Error');
-            // });
+        if(cartFood != ''){
+            this.saveOrderFood(param);
+        }else{
+            this.saveOrderDrink(param);
+        }
+    }
+
+    saveOrder(total){
+        var date = new Date();
+        let th = date.getDate();
+        let year = date.getFullYear();
+        let month = date.getMonth();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let time = hour + ':' + minute;
+        let dateOrder = year+'-'+month+'-'+th+' '+hour+':'+minute;
+
+        let reqParam = {
+            link: 'order/add',
+            method: 'post',
+            data: {
+                userId: 'shGVaIWxSofAPm86EY5n',
+                note: 'Mejanya dijadikan satu',
+                orderDate: dateOrder,
+                expired: time,
+                totalPrices: total
+            }
+        }
+
+        Http.post(reqParam).then((res) => {
+            console.log('ORDER >>',res);
+            let orderId = res.data.orderId;
+            this.saveOrderFood(orderId);
+            this.saveOrderTable(orderId);
+            this.saveOrderDrink(orderId);
+        }).catch((err) => {
+            console.log('Error');
         });
     }
 
+    saveOrderTable(param){
+        let table = this.props.table;
+        table.map((item, i) => {
+            let reqParam = {
+                link: 'order/add_table',
+                method: 'post',
+                data: {
+                    orderId: param,
+                    tableId: item.tableId,
+                    timeChoosen: item.timeOrder
+                }
+            }
+
+            console.log('FOOD >>', reqParam);
+            Http.post(reqParam).then((res) => {
+                console.log('RESPONSE >>', res);
+            }).catch((err) => {
+                console.log('Error');
+            });
+        });
+    };
+
+    saveOrderFood(param){
+        let tes = [];
+        let cartFood = this.props.cartFood;
+        if(cartFood != ''){
+            cartFood.map((item, i) => {
+                let reqParam = {
+                    link: 'order/add_item',
+                    method: 'post',
+                    data: {
+                        orderId: param,
+                        foodId: item.foodId,
+                        drinkId: 0,
+                        qty: 1
+                    }
+                }
+
+                console.log('FOOD >>', reqParam);
+                Http.post(reqParam).then((res) => {
+                    let orderItemId = res.data.orderItemId;
+                }).catch((err) => {
+                    console.log('Error');
+                });
+            });
+        }else{
+            console.log('Data Not Found');
+        }
+    }
+
+    saveOrderDrink(param){
+        let cartDrink = this.props.cartDrink;
+        if(cartDrink != ''){
+            cartDrink.map((item, i) => {
+                let reqParam = {
+                    link: 'order/add_item',
+                    method: 'post',
+                    data: {
+                        orderId: param,
+                        drinkId: item.drinkId,
+                        foodId: 0,
+                        qty: 1
+                    }
+                }
+
+                Http.post(reqParam).then((res) => {
+                    console.log('TESTING >>', res);
+                }).catch((err) => {
+                    console.log('Error');
+                });
+            });
+        }else{
+            console.log('Data Not Found');
+        }
+    }
+
+   
     _renderOrderTable(){
         let component = [];
         if(this.props.table == ''){
@@ -179,6 +279,7 @@ class Keranjang extends Component {
             total += parseInt(item);
         });
         let totalAll = total + 2000;
+
         let component = (
             <View>
             <View style={{ flexDirection: "row" }}>
@@ -215,6 +316,7 @@ class Keranjang extends Component {
                 <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
             </View>
             <TouchableOpacity
+                onPress = {() => this.saveOrder(totalAll)}
                 style={{
                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                     alignItems: "center", marginTop: 10

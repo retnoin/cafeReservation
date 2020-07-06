@@ -75,7 +75,6 @@ class Meja extends Component {
     }
 
     _selected(val, type){
-        console.log('BAKA >>', val.item.tableId);
         if(type == 'meja'){
             this.setState({
                 meja: val.item.numberOfTable,
