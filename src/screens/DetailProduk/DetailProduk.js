@@ -37,19 +37,38 @@ export class DetailProduk extends Component {
 
     _addToFoodCart(item){
         console.log('FOOD');
-        this.props.addToFoodCart(item);
+        item.qty = 1;
+        let cartList = this.props.cartFood;
+        if(cartList == ''){
+            this.props.addToFoodCart(item);
+        }else{
+            cartList.map((row, i) => {
+                if(row.foodId != item.foodId){
+                    this.props.addToDrinkCart(item);
+                }
+            });
+        }
         this.props.navigation.navigate('keranjang');
     }
 
     _addToDrinkCart(item) {
-        console.log('DRINK');
-        this.props.addToDrinkCart(item);
+        console.log('DRINK', item);
+        item.qty = 1;
+        let cartList = this.props.cartDrink;
+        if(cartList == ''){
+            this.props.addToDrinkCart(item);
+        }else{
+            cartList.map((row, i) => {
+                if(row.drinkId != item.drinkId){
+                    this.props.addToDrinkCart(item);
+                }
+            });
+        }
         this.props.navigation.navigate('keranjang');
     }
 
     _renderMenu(){
         let {data} = this.props.route.params;
-        data.qty = 1;
         let component = [];
         component = 
         <View style={{flex: 1}}>
@@ -89,7 +108,6 @@ export class DetailProduk extends Component {
     _renderDrink(){
         let component;
         let {data} = this.state;
-        data.qty = 1;
         component = 
         <View style={{ flex: 1 }}>
             <ScrollView>
@@ -137,7 +155,8 @@ export class DetailProduk extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        cartFood: state.cartFoodList,
+        cartFood: state.authReducer.cartFoodList,
+        cartDrink: state.authReducer.cartDrinkList
     }
 }
 
