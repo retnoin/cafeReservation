@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLOR } from '../../components/common/color';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { ScrollView } from 'react-native-gesture-handler';
 import NumericInput from 'react-native-numeric-input';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { addToFoodCart, addToDrinkCart, addTableToCart } from '../../redux/actions/authActions';
 import { connect } from 'react-redux';
@@ -12,20 +13,32 @@ import { bindActionCreators } from 'redux';
 
 import * as Http from "../../helper/http";
 import * as Hooks from "../../helper/hooks";
+import { categories } from '../../service/dataArrays';
 
 class Keranjang extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 1,
+            valueQtyFood: 0,
+            valueQtyDrink: 0,
             subTotalMeja: 0,
-            subTotalItem: {data: []},
+            subTotalItem: {subTable: 0, subFood: 0, subDrink: 0},
             totalPayment: 0,
             ppn: 2000,
+            userId: '',
+            note: '',
+            cart: '',
+            timeFood: false,
+            timeDrink: false
         };
     }
 
-    componentDidMount(){
+    componentDidMount = async() => {
+        var user = await AsyncStorage.getItem("user");
+        var obj = JSON.parse(user);
+        this.setState({
+            userId: obj.userId
+        })
         console.log('PAGE TABLE', this.props.table);
         console.log('PAGE CART FOOD', this.props.cartFood);
         console.log('PAGE CART DRINK', this.props.cartDrink);
@@ -57,8 +70,8 @@ class Keranjang extends Component {
             link: 'order/add',
             method: 'post',
             data: {
-                userId: 'shGVaIWxSofAPm86EY5n',
-                note: 'Mejanya dijadikan satu',
+                userId: this.state.userId,
+                note: this.state.note,
                 orderDate: dateOrder,
                 expired: time,
                 totalPrices: total
@@ -208,7 +221,7 @@ class Keranjang extends Component {
                 </View>
             );
         });
-        this.state.subTotalItem.data.push(tes);
+        this.state.subTotalItem.total = tes;
         return component;
     }
 
@@ -219,15 +232,15 @@ class Keranjang extends Component {
         }
         let subItem = 0;
         this.props.cartFood.map((item, i) => {
-            subItem += parseInt(item.price) * parseInt(this.state.value);
+            subItem += parseInt(item.price) * parseInt(item.qty);
             component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
                 <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text>{item.name}</Text>
                     <Text style={{ marginBottom: 14 }}>{Hooks.formatMoney(item.price)}</Text>
-                    <NumericInput value={this.state.value}
-                        onChange={value => this.setState({ value })}
-                        minValue={1}
+                    <NumericInput 
+                        value={item.qty}
+                        onChange={qty => this.addQtyFood({foodId:item.foodId, qty: qty})}
                         totalWidth={100}
                         totalHeight={30}
                         valueType='real'
@@ -239,7 +252,8 @@ class Keranjang extends Component {
                 </View>
             </View>)
         });
-        this.state.subTotalItem.data.push(subItem);
+        console.log('FOOD TOTAL >>', subItem);
+        this.state.subTotalItem.subFood = subItem;
         return component;
     }
 
@@ -250,15 +264,15 @@ class Keranjang extends Component {
         }
         let subItem = 0;
         this.props.cartDrink.map((item, i) => {
-            subItem += parseInt(item.price) * parseInt(this.state.value);
+            subItem += parseInt(item.price) * parseInt(item.qty);
             component.push(<View style={{ flexDirection: "row", marginBottom: 15 }}>
                 <View style={{ width: 80, height: 80, backgroundColor: "grey" }} />
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text>{item.name}</Text>
                     <Text style={{ marginBottom: 14 }}>{Hooks.formatMoney(item.price)}</Text>
-                    <NumericInput value={this.state.value}
-                        onChange={value => this.setState({ value })}
-                        minValue={1}
+                    <NumericInput 
+                        value={item.qty}
+                        onChange={qty => this.addQtyDrink({drinkId:item.drinkId, qty: qty})}
                         totalWidth={100}
                         totalHeight={30}
                         valueType='real'
@@ -270,16 +284,70 @@ class Keranjang extends Component {
                 </View>
             </View>)
         });
-        this.state.subTotalItem.data.push(subItem);
+        this.state.subTotalItem.subDrink = subItem;
         return component;
+    }
+
+    addQtyDrink(val){
+        let drink = this.props.cartDrink;    
+        if(val.qty == 0){
+            drink.map((item, i) => {
+                if(item.drinkId == val.drinkId){
+                    drink.splice(i, 1);
+                }
+            })
+            setTimeout(() => {
+                this.setState({
+                    timeDrink: true
+                });
+            }, 100);
+        }else{
+            drink.map((item, i) => {
+                if(item.drinkId == val.drinkId){
+                    item.qty = val.qty;
+                }
+            });
+            setTimeout(() => {
+                this.setState({
+                    timeDrink: true
+                });
+            }, 100);
+        }
+    }
+
+    addQtyFood(val){
+        let food = this.props.cartFood;
+        if (val.qty == 0) {
+            food.map((item, i) => {
+                if (item.foodId == val.foodId) {
+                    food.splice(i, 1);
+                }
+            });
+            setTimeout(() => {
+                this.setState({
+                    timeFood: true
+                });
+            }, 100);
+        } else {
+            food.map((item, i) => {
+                if (item.foodId == val.foodId) {
+                    item.qty = val.qty;
+                }
+            });
+            setTimeout(() => {
+                this.setState({
+                    timeFood: true
+                });
+            }, 100);
+        }
+
     }
 
     _rendeDetailPayment(){
         let total = 0;
-        this.state.subTotalItem.data.map((item, i) => {
-            total += parseInt(item);
-        });
-        // let totalAll = total + 2000;
+        let {subTotalItem} = this.state;
+        total = parseInt(subTotalItem.subFood) + parseInt(subTotalItem.subDrink) + parseInt(subTotalItem.subTable);
+        let totalAll = total + 2000;
 
         let component = (
             <View>
@@ -314,7 +382,7 @@ class Keranjang extends Component {
                 marginTop: 8
             }}>
                 <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
-                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(total)}</Text>
+                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
             </View>
             <TouchableOpacity
                 onPress = {() => this.saveOrder(total)}
@@ -327,6 +395,30 @@ class Keranjang extends Component {
             </View>
         );
         console.log('BAKA A A >>', this.state.subTotalItem);
+        return component;
+    }
+
+    _renderNote(){
+        console.log('FOOD >> ',this.props.cartFood);
+        let component = (
+            <View>
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
+                        Note
+                    </Text>
+                </View>
+                <View>
+                    <TextInput
+                    multiline={true}
+                    numberOfLines={4}
+                    style={{borderWidth: 1, borderColor: '#CCC', paddingLeft: 15, paddingRight: 15, textAlignVertical: 'top'}}
+                    placeholder = "Note..."
+                    onChangeText={(text) => this.setState({ note: text })}
+                    value={this.state.note} />
+                </View>
+            </View>
+        )
+
         return component;
     }
 
@@ -354,6 +446,12 @@ class Keranjang extends Component {
                     }} />
                     {this._renderOrderFood()}
                     {this._renderOrderDrink()}
+                </View>
+                <View style={{
+                    backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
+                    borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
+                }}>
+                    {this._renderNote()}
                 </View>
                 <View style={{
                     backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
