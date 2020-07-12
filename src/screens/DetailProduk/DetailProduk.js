@@ -49,6 +49,7 @@ export class DetailProduk extends Component {
 
     _renderMenu(){
         let {data} = this.props.route.params;
+        data.qty = 1;
         let component = [];
         component = 
         <View style={{flex: 1}}>
@@ -88,6 +89,7 @@ export class DetailProduk extends Component {
     _renderDrink(){
         let component;
         let {data} = this.state;
+        data.qty = 1;
         component = 
         <View style={{ flex: 1 }}>
             <ScrollView>
