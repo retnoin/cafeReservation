@@ -221,7 +221,7 @@ class Keranjang extends Component {
                 </View>
             );
         });
-        this.state.subTotalItem.total = tes;
+        this.state.subTotalItem.subTable = tes;
         return component;
     }
 
