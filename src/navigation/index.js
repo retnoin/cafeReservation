@@ -20,6 +20,7 @@ import Keranjang from '../screens/Keranjang/Keranjang';
 import Pesan from '../screens/Booking/Pesan';
 import KodeBooking from '../screens/Booking/KodeBooking';
 import Detailbooking from '../screens/Booking/Detailbooking';
+import HistoryOrder from "../screens/HistoryOrder/HistoryOrder";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -80,6 +81,25 @@ const HomeStack = () => {
             />
         </Stack.Navigator>
 
+    )
+}
+
+const HistoryOrderStack = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="history" component={HistoryOrder}
+                options={{
+                    headerTitle: "History Order",
+                    headerTitleStyle: {
+                        color: COLOR.primary_color
+                    },
+                    headerStyle: {
+                        backgroundColor: COLOR.secondary_color
+                    }
+                }}
+            />
+        </Stack.Navigator >
     )
 }
 
@@ -169,6 +189,14 @@ export const MainTabs = () => {
                     )
                 }}
             />
+            <Tabs.Screen
+                name="historyorder" component={HistoryOrderStack}
+                options={{
+                    title: "History Order",
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialIcons name="history" size={25} color={color} />
+                    )
+                }} />
             <Tabs.Screen
                 name="kodebooking" component={BookingStack}
                 options={{
