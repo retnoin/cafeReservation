@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import styles from '../../components/common/styles';
 import * as Http from "../../helper/http";
 import * as Hooks from "../../helper/hooks";
@@ -39,6 +41,16 @@ class Pesan extends Component {
     }else{
       this.props.navigation.navigate('homemain');
     }
+  }
+
+  chooseImage(){
+	  ImagePicker.openPicker({
+		  width: 300,
+		  height: 400,
+		  cropping: true
+	  }).then(image => {
+		  console.log(image);
+	  });
   }
 
   render() {
@@ -101,6 +113,7 @@ class Pesan extends Component {
             <Text style={{ fontSize: 16, fontWeight: "700" }}>{Hooks.formatMoney(totalPayment)}</Text>
           </View>
           <TouchableOpacity
+		  	onPress={() => this.chooseImage()}
             style={{
               padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
               alignItems: "center", marginTop: 40
