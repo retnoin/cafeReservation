@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -54,6 +54,7 @@ export default class HistoryOrder extends Component {
             let data = (
                 <View>
                     <View style={{marginBottom: 10}}></View>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('payment', { orderId: item.orderId})}>
                     <View style={{ flexDirection: "row", backgroundColor: '#FFF' }}>
                         <View style={{ paddingHorizontal: 10, padding: 15 }}>
                             <View style={{ flexDirection: 'row' }}>
@@ -70,6 +71,7 @@ export default class HistoryOrder extends Component {
                             </View>
                         </View>
                     </View>
+                    </TouchableOpacity>
                 </View>
             )
             component.push(data);
