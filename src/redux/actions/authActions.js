@@ -48,6 +48,15 @@ export const LoginAuth = (link, data) => {
     })
 }
 
+export const showBadge = (item) => {
+    return ((dispatch) => {
+        dispatch({
+            type: AUTH_SERVICE.BADGE,
+            badge: item
+        });
+    })
+}
+
 export const addToFoodCart = (item) => {
     return ((dispatch) => {
         dispatch({

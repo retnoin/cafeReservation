@@ -5,9 +5,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLOR } from '../components/common/color';
 
+import { showBadge } from '../redux/actions/authActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import * as Http from "../helper/http";
 
-export default class Badge extends Component {
+class Badge extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,7 +39,7 @@ export default class Badge extends Component {
         Http.post(paramPost)
         .then((res) => {
             let count = res.data.length;
-            AsyncStorage.setItem('bagde', JSON.stringify({count: count}));
+            this.props.showBadge(count);
             this.setState({
                 countBadge: count
             });
@@ -46,11 +50,17 @@ export default class Badge extends Component {
     }
 
     render() {
+        console.log('WELCOME <<', this.props.badge);
+        let checkedBadge = false;
+        if(this.props.badge > 0){
+            checkedBadge = true;
+        }
+
         return (
             <View style={{marginTop: 10}}>
                 <MaterialIcons name="notifications" size={25} color='#CCC' />
                 {
-                    (this.state.countBadge != 0) ? 
+                    (checkedBadge != false) ? 
                         <View style={{
                             position: 'absolute',
                             right: -6,
@@ -66,7 +76,7 @@ export default class Badge extends Component {
                             <Text style={{
                                 color: '#FFF',
                                 fontSize: 10
-                            }}>{this.state.countBadge}</Text>
+                            }}>{this.props.badge}</Text>
                         </View>
                     : <Text></Text>
                 }
@@ -75,3 +85,15 @@ export default class Badge extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        badge: state.authReducer.badge
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({ showBadge }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Badge);

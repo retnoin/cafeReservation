@@ -5,6 +5,10 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { COLOR } from '../../components/common/color';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import { showBadge } from '../../redux/actions/authActions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 import Badge from "../../components/badge";
 
 import userStore from '../../helper/storeUser';
@@ -72,6 +76,8 @@ class KodeBooking extends Component {
         .then((res) => {
             let response = res.data;
             console.log('res >>', response);
+            let count = response.length;
+            this.props.showBadge(count);
             setTimeout(() => {
                 this.getListNotif();
             }, 100);
@@ -142,4 +148,14 @@ class KodeBooking extends Component {
     }
 }
 
-export default KodeBooking;
+const mapStateToProps = (state) => {
+    return {
+        badge: state.authReducer.badge
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({ showBadge }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(KodeBooking);

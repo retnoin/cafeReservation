@@ -7,7 +7,8 @@ const initialState = {
     failed: false,
     cartFoodList: [],
     cartDrinkList: [],
-    tableList: []
+    tableList: [],
+    badge: 0
 }
 
 const {
@@ -17,7 +18,8 @@ const {
     LOGOUT_USER,
     ADD_FOOD_CART,
     ADD_DRINK_CART,
-    ADD_TABLE_TOCART
+    ADD_TABLE_TOCART,
+    BADGE
 } = AUTH_SERVICE;
 
 export const authReducer = (state = initialState, actions) => {
@@ -39,6 +41,12 @@ export const authReducer = (state = initialState, actions) => {
             return {
                 ...state,
                 tableList: state.tableList.concat(actions.tableList)
+            }
+        case BADGE:
+            console.log('TABLE >>',actions.badge);
+            return {
+                ...state,
+                badge: actions.badge
             }
         case REQ_LOGIN_APPS:
             return {
