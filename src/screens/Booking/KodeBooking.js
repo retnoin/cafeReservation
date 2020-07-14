@@ -5,6 +5,8 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { COLOR } from '../../components/common/color';
 import { ScrollView } from 'react-native-gesture-handler';
 
+import Badge from "../../components/badge";
+
 import userStore from '../../helper/storeUser';
 
 import * as Http from "../../helper/http";
@@ -46,6 +48,7 @@ class KodeBooking extends Component {
         Http.post(reqParam)
         .then((res) => {
             let response = res.data;
+            let countBadge = response.length;
             this.setState({
                listNotif : response
             });
@@ -114,7 +117,6 @@ class KodeBooking extends Component {
     }
 
     render() {
-        console.log('BAKAA:LLLLA AA >>', this.state.listNotif);
         return (
             <ScrollView
             refreshControl={
