@@ -53,6 +53,7 @@ class KodeBooking extends Component {
         .then((res) => {
             let response = res.data;
             let countBadge = response.length;
+            this.props.showBadge(countBadge);
             this.setState({
                listNotif : response
             });
