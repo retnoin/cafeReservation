@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
 import firebase from 'react-native-firebase';
-// import uuid from 'react-native-uuid';
+import uuid from 'react-native-uuid';
 
 import styles from '../../components/common/styles';
 import * as Http from "../../helper/http";
@@ -25,7 +25,6 @@ class Pesan extends Component {
   }
 
   componentDidMount(){
-	// console.log('BAKA');
     // console.log(this.props.route.params.orderId);
 	this.getOrder();
   }
@@ -58,6 +57,7 @@ uploadImagePayment(param){
 	Http.post(paramPost)
 	.then((res) => {
 		console.log('RESPONSE >>', res);
+		this.props.navigation.navigate('history');
 	})
 	.catch(err => {
 		console.log('Error');
@@ -76,12 +76,12 @@ chooseImage(){
 }
 
 uploadImage(val){
-	const uuid = '110ec58a-a0f2-4ac4-8393-c866d813b8d1';
+	const uid = uuid.v4();
 	if(val.path){
 		let fileExt = val.path.split('.').pop();
 		// console.log('TOKEN >>', token);
 		// console.log('BAKA >>', fileExt);
-		let fileName = `${uuid}.${fileExt}`;
+		let fileName = `${uid}.${fileExt}`;
 		let refStorage = firebase.storage().ref(`payment/images/${fileName}`);
 		refStorage.putFile(val.path)
 		.on(
