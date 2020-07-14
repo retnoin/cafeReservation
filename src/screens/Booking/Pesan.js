@@ -1,25 +1,31 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
+import firebase from 'react-native-firebase';
+// import uuid from 'react-native-uuid';
 
 import styles from '../../components/common/styles';
 import * as Http from "../../helper/http";
 import * as Hooks from "../../helper/hooks";
+import {base_url} from "../../utils/config";
 
 import { ScrollView } from 'react-native-gesture-handler';
 import { COLOR } from '../../components/common/color';
+import { Header } from 'react-native/Libraries/NewAppScreen';
 
 class Pesan extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataOrder: ''
+	  dataOrder: '',
+	  dataImage: ''
     };
   }
 
   componentDidMount(){
     // console.log(this.props.route.params.dataOrder);
-    this.getOrder();
+	this.getOrder();
   }
 
   getOrder(){
@@ -33,7 +39,6 @@ class Pesan extends Component {
         }
       }
       Http.post(reqParam).then((res) => {
-        console.log('DATA >>', res.data);
         this.setState({dataOrder: res.data[0]});
       }).catch((err) => {
         console.log('Error');
@@ -43,17 +48,67 @@ class Pesan extends Component {
     }
   }
 
-  chooseImage(){
-	  ImagePicker.openPicker({
-		  width: 300,
-		  height: 400,
-		  cropping: true
-	  }).then(image => {
-		  console.log(image);
-	  });
-  }
+uploadImagePayment(param){
+	let paramPost = {
+		link: 'order/update/'+this.state.dataOrder.orderId,
+		method: 'put',
+		data:{
+			imageUrl: param.imageUrl
+		}
+	}
+	Http.post(paramPost)
+	.then((res) => {
+		console.log('RESPONSE >>', res);
+	})
+	.catch(err => {
+		console.log('Error');
+	});
+}
 
-  render() {
+chooseImage(){
+	let date = new Date();
+	ImagePicker.openPicker({
+		width: 300,
+		height: 400,
+		cropping: true
+	}).then(image => {
+		this.uploadImage(image);
+	});
+}
+
+uploadImage(val){
+	const uuid = '110ec58a-a0f2-4ac4-8393-c866d813b8d1';
+	if(val.path){
+		let fileExt = val.path.split('.').pop();
+		// console.log('TOKEN >>', token);
+		// console.log('BAKA >>', fileExt);
+		let fileName = `${uuid}.${fileExt}`;
+		let refStorage = firebase.storage().ref(`payment/images/${fileName}`);
+		refStorage.putFile(val.path)
+		.on(
+			firebase.storage.TaskEvent.STATE_CHANGED,
+			snapshot => {
+				console.log('Snapshot >> ', snapshot.state);
+				console.log('Progress >>', (snapshot.bytesTransferred/snapshot.totalBytes) * 100);
+
+				if(snapshot.state == firebase.storage.TaskState.SUCCESS){
+					console.log('SUCCESS');
+				}
+			}, err => {
+				unsubscribe();
+				console.log('Upload image error');
+			},() => {
+				refStorage.getDownloadURL().then((downloadUrl) => {
+					console.log('File available at ', downloadUrl);
+					this.uploadImagePayment({imageUrl: downloadUrl});
+				})
+			}
+		);
+	}
+};
+
+
+  render() { 
     let {dataOrder} = this.state;
     let totalPayment = parseInt(dataOrder.totalPrices) + 2000;
     return (
@@ -75,6 +130,21 @@ class Pesan extends Component {
             <Text style={{ fontSize: 18, marginTop: 5 }}>Rekening Bank Mandiri</Text>
           </View>
         </View>
+		<View style={{
+          backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
+          borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
+        }}>
+			<View style={{ flexDirection: "row" }}>
+				<Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
+					Order ID: {dataOrder.orderId}
+				</Text>
+          	</View>
+			<View style={{ flexDirection: "row" }}>
+				<Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
+					Status: {dataOrder.statusOrder}
+				</Text>
+			</View>
+		</View>
         <View style={{
           backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
           borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
