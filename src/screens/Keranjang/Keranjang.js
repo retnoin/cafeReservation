@@ -41,8 +41,6 @@ class Keranjang extends Component {
             userId: obj.userId
         })
         console.log('PAGE TABLE', this.props.table);
-        console.log('PAGE CART FOOD', this.props.cartFood);
-        console.log('PAGE CART DRINK', this.props.cartDrink);
     }
 
     //Save Order Item
