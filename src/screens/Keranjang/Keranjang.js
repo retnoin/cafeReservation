@@ -30,7 +30,8 @@ class Keranjang extends Component {
             note: '',
             cart: '',
             timeFood: false,
-            timeDrink: false
+            timeDrink: false,
+            timeTable: false
         };
     }
 
@@ -165,7 +166,21 @@ class Keranjang extends Component {
         }
     }
 
-   
+    _removeTable(param){
+        let tabel = this.props.table;
+        tabel.map((item, i) => {
+            if(item.tableId == param){
+                tabel.splice(i, 1);
+            }
+        });
+
+        setTimeout(() => {
+            this.setState({
+                timeTable: true
+            });
+        }, 100);
+    }
+
     _renderOrderTable(){
         let component = [];
         if(this.props.table == ''){
@@ -207,6 +222,14 @@ class Keranjang extends Component {
                                 }}>{table.countPeople}</Text>
                             </View>
                         </View>
+                    </View>
+                    <View style={{flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end"}}>
+                        <TouchableOpacity onPress={() => this._removeTable(table.tableId)}>
+                            <View style={{flexDirection: "row"}}> 
+                                <MaterialIcons name="delete" color={COLOR.primary_color} size={20} />
+                                <Text>Hapus</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={{ paddingVertical: 10 }} />
                     <View style={{
@@ -347,6 +370,10 @@ class Keranjang extends Component {
         let {subTotalItem} = this.state;
         total = parseInt(subTotalItem.subFood) + parseInt(subTotalItem.subDrink) + parseInt(subTotalItem.subTable);
         let totalAll = total + 2000;
+        let checkCart = false;
+        if(this.props.table != ""){
+            checkCart = true;
+        }
 
         let component = (
             <View>
@@ -383,14 +410,19 @@ class Keranjang extends Component {
                 <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
                 <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
             </View>
-            <TouchableOpacity
-                onPress = {() => this.saveOrder(total)}
-                style={{
-                    padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-                    alignItems: "center", marginTop: 10
-                }}>
-                <Text style={{ color: COLOR.white }}>Pesan</Text>
-            </TouchableOpacity>
+            {
+                (checkCart == true) ? 
+                    <TouchableOpacity
+                        onPress = {() => this.saveOrder(total)}
+                        style={{
+                            padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+                            alignItems: "center", marginTop: 10
+                        }}>
+                        <Text style={{ color: COLOR.white }}>Pesan</Text>
+                    </TouchableOpacity>
+                : <Text></Text>        
+            }
+            
             </View>
         );
         console.log('BAKA A A >>', this.state.subTotalItem);
