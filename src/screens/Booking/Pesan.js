@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
 import firebase from 'react-native-firebase';
@@ -19,8 +19,10 @@ class Pesan extends Component {
     super(props);
     this.state = {
 	  dataOrder: '',
+	  timeCount: 0, 
 	  dataImage: '',
-	  loading: false
+	  loading: false,
+	  refreshing: false
     };
   }
 
@@ -108,12 +110,19 @@ uploadImage(val){
 	}
 };
 
+	_onRefresh() {
+		this.setState({ refreshing: true });
+		fetchData().then(() => {
+			this.setState({ refreshing: false });
+		});
+	}
 
   render() { 
 	let {dataOrder, loading} = this.state;
-	console.log('LOADINg >>',loading);
-    let totalPayment = parseInt(dataOrder.totalPrices) + 2000;
-	if(loading){
+	let totalPayment = parseInt(dataOrder.totalPrices) + 2000;
+	let tes = moment('2020-07-14 01:22:56').format("YYYY-MM-DD hh:mm:ss");
+	console.log(tes);
+	if(loading == true){
 		return (
 			<View style={[styles.container, styles.horizontal]}>
 				<ActivityIndicator size="large" color="#00ff00" />
@@ -127,7 +136,7 @@ uploadImage(val){
           borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
         }}>
           <View>
-            <Text style={{ marginTop: 5, fontSize: 18 }}>Batas waktu pembayaran yaitu {dataOrder.expired} menit.{"\n"}
+            <Text style={{ marginTop: 5, fontSize: 18 }}>Batas waktu pembayaran sampai jam {dataOrder.expired}.{"\n"}
              Transfer total pembayaran ke rekening berikut ini, lalu unggah bukti transfer.{"\n"}
              Tunggu konfirmasi dari Admin kami untuk mendapatkan kode booking.
            </Text>
@@ -191,6 +200,7 @@ uploadImage(val){
             <Text style={{ fontSize: 16, fontWeight: "700" }}>Total Pembayaran</Text>
             <Text style={{ fontSize: 16, fontWeight: "700" }}>{Hooks.formatMoney(totalPayment)}</Text>
           </View>
+		  
 		  {
 					(dataOrder.imageUrl != '') ? 
 						<View style={{

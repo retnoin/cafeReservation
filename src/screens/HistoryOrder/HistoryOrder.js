@@ -82,7 +82,9 @@ export default class HistoryOrder extends Component {
     render() {
         return (
         <View style={{flex: 1, padding: 15}}>
-            {this._renderOrderList()}
+            <ScrollView>
+                {this._renderOrderList()}
+            </ScrollView>
         </View>
         );
     }
