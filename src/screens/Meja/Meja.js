@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { addTableToCart } from '../../redux/actions/authActions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import Badge from '../../components/badge';
 const { width, height } = Dimensions.get("screen")
 
 class Meja extends Component {
