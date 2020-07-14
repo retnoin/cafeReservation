@@ -1,0 +1,40 @@
+{
+    "project_info": {
+        "project_number": "726108269072",
+        "firebase_url": "https://reservation-1b2b0.firebaseio.com",
+        "project_id": "reservation-1b2b0",
+        "storage_bucket": "reservation-1b2b0.appspot.com"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:726108269072:android:527284e240f8a91e907895",
+                "android_client_info": {
+                    "package_name": "com.firstprogram"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "726108269072-9ic5858cv4k893tvuj12277vcp594lp1.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyAvxRjfxZ1FcIJ8OAEkmTeG60IZGfv9qEM"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "726108269072-9ic5858cv4k893tvuj12277vcp594lp1.apps.googleusercontent.com",
+                            "client_type": 3
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
