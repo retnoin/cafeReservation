@@ -99,6 +99,19 @@ const HistoryOrderStack = () => {
                     }
                 }}
             />
+            <Stack.Screen
+                name="payment" component={Pesan}
+                options={{
+                    headerTitle: "Payment",
+                    headerLeft: null,
+                    headerTitleStyle: {
+                        color: COLOR.primary_color
+                    },
+                    headerStyle: {
+                        backgroundColor: COLOR.secondary_color
+                    }
+                }}
+            />
         </Stack.Navigator >
     )
 }

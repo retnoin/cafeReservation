@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
 import firebase from 'react-native-firebase';
@@ -19,12 +19,14 @@ class Pesan extends Component {
     super(props);
     this.state = {
 	  dataOrder: '',
-	  dataImage: ''
+	  dataImage: '',
+	  loading: false
     };
   }
 
   componentDidMount(){
-    // console.log(this.props.route.params.dataOrder);
+	// console.log('BAKA');
+    // console.log(this.props.route.params.orderId);
 	this.getOrder();
   }
 
@@ -32,14 +34,11 @@ class Pesan extends Component {
     let orderId = this.props.route.params.orderId;
     if(orderId != ''){
       let reqParam = {
-        link: 'order/orderbyuser',
-        method: 'post',
-        data: {
-          orderId: orderId
-        }
+        link: 'order/search/'+orderId,
+        method: 'get'
       }
       Http.post(reqParam).then((res) => {
-        this.setState({dataOrder: res.data[0]});
+        this.setState({dataOrder: res.data, loading: false});
       }).catch((err) => {
         console.log('Error');
       });
@@ -109,9 +108,17 @@ uploadImage(val){
 
 
   render() { 
-    let {dataOrder} = this.state;
+	let {dataOrder, loading} = this.state;
+	console.log('LOADINg >>',loading);
     let totalPayment = parseInt(dataOrder.totalPrices) + 2000;
-    return (
+	if(loading){
+		return (
+			<View style={[styles.container, styles.horizontal]}>
+				<ActivityIndicator size="large" color="#00ff00" />
+			</View>
+		)
+	}
+	return (
       <ScrollView>
         <View style={{
           backgroundColor: "#fff", marginTop: 10, marginHorizontal: 10,
@@ -152,7 +159,7 @@ uploadImage(val){
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
               Detail Pembayaran
-                        </Text>
+            </Text>
           </View>
           <View style={{
             marginTop: 5, marginBottom: 10, width: "100%",
@@ -183,20 +190,22 @@ uploadImage(val){
             <Text style={{ fontSize: 16, fontWeight: "700" }}>{Hooks.formatMoney(totalPayment)}</Text>
           </View>
 		  {
-					(dataOrder.imageUrl == '') ? <TouchableOpacity
-						onPress={() => this.chooseImage()}
-						style={{
-							padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-							alignItems: "center", marginTop: 40
-						}}>
-						<Text style={{ color: COLOR.white, fontSize: 18, fontWeight: "600" }}>Upload Bukti Pembayaran</Text>
-					</TouchableOpacity>
-						: <View style={{
+					(dataOrder.imageUrl != '') ? 
+						<View style={{
 							padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
 							alignItems: "center", marginTop: 40
 						}}>
 							<Text style={{ color: COLOR.white, fontSize: 18, fontWeight: "600" }}>Bukti payment sedang di check</Text>
 						</View>
+						: 
+						<TouchableOpacity
+							onPress={() => this.chooseImage()}
+							style={{
+								padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+								alignItems: "center", marginTop: 40
+							}}>
+							<Text style={{ color: COLOR.white, fontSize: 18, fontWeight: "600" }}>Upload Bukti Pembayaran</Text>
+						</TouchableOpacity>
 		  }
           
         </View>

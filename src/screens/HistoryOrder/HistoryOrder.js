@@ -54,7 +54,7 @@ export default class HistoryOrder extends Component {
             let data = (
                 <View>
                     <View style={{marginBottom: 10}}></View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('payment', { orderId: item.orderId})}>
+                    <TouchableOpacity onPress={() => this.props.navigation.push('payment', {orderId: item.orderId})}>
                     <View style={{ flexDirection: "row", backgroundColor: '#FFF' }}>
                         <View style={{ paddingHorizontal: 10, padding: 15 }}>
                             <View style={{ flexDirection: 'row' }}>
