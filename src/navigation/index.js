@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { View, Text} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -23,6 +24,7 @@ import Detailbooking from '../screens/Booking/Detailbooking';
 import HistoryOrder from "../screens/HistoryOrder/HistoryOrder";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import Badge from "../components/badge";
 
 
 
@@ -215,7 +217,9 @@ export const MainTabs = () => {
                 options={{
                     title: "Notifikasi",
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="notifications" size={25} color={color} />
+                        <View>
+                            <Badge />
+                        </View>
                     )
                 }} />
             <Tabs.Screen
