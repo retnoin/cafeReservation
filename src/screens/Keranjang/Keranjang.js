@@ -6,6 +6,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import { ScrollView } from 'react-native-gesture-handler';
 import NumericInput from 'react-native-numeric-input';
 import AsyncStorage from '@react-native-community/async-storage';
+import moment from "moment";
 
 import { addToFoodCart, addToDrinkCart, addTableToCart } from '../../redux/actions/authActions';
 import { connect } from 'react-redux';
@@ -73,7 +74,7 @@ class Keranjang extends Component {
                 userId: this.state.userId,
                 note: this.state.note,
                 orderDate: dateOrder,
-                expired: time,
+                expired: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
                 totalPrices: total
             }
         }
