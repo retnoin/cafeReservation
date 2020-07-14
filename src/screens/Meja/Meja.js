@@ -182,7 +182,7 @@ class Meja extends Component {
             return alert('Maaf meja pada jam tersebut sudah di pesan silahkan pesan pada jam yang lain');
         }
         this.props.addTableToCart(table);
-        this.props.navigation.navigate('Menu');
+        this.props.navigation.push('Menu');
     }
 
     _selected_table(param){
@@ -400,7 +400,7 @@ class Meja extends Component {
                         <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" }}>
                             {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Rp 50.000</Text> */}
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Menu')}//this.props.navigation.navigate('Menu')}
+                                onPress={() => this.props.navigation.push('Menu')}//this.props.navigation.navigate('Menu')}
                                 style={{
                                     padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
                                     alignSelf: 'flex-end'
