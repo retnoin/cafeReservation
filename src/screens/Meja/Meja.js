@@ -32,7 +32,8 @@ class Meja extends Component {
             data: [],
             dataTable: [],
             orderTable: '',
-            selectedTable: ''
+            selectedTable: '',
+            dataOrder: []
         };
     }
 
@@ -75,6 +76,7 @@ class Meja extends Component {
         var dataUser = JSON.parse(user);
         this.setState({userId: dataUser.userId});
         this.getListTable();
+        this.orderList();
     }
 
     _selected(val, type){
@@ -98,6 +100,20 @@ class Meja extends Component {
                 timeOrder: val.timeOrder
             });
         }
+    }
+
+    orderList(){
+        let paramPost = {
+            link: 'order/list_order_table',
+            method: 'get'
+        }
+        Http.post(paramPost)
+        .then((res) => {
+            let data = res.data;
+            this.setState({dataOrder: data});
+        }).catch(err => {
+            alert('Ops: something error');
+        });
     }
 
     recommendTable(param){
@@ -154,6 +170,16 @@ class Meja extends Component {
                 countPeople: countPeople,
                 price: 50000
             }
+        }
+        let checkBooking = false;
+        this.state.dataOrder.map((item, i) => {
+            if(item.tableId == this.state.tableId && item.timeChoosen == this.state.timeOrder){
+                checkBooking = true;
+            }
+        });
+
+        if(checkBooking == true){
+            return alert('Maaf meja pada jam tersebut sudah di pesan silahkan pesan pada jam yang lain');
         }
         this.props.addTableToCart(table);
         this.props.navigation.navigate('Menu');
