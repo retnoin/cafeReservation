@@ -182,14 +182,23 @@ uploadImage(val){
             <Text style={{ fontSize: 16, fontWeight: "700" }}>Total Pembayaran</Text>
             <Text style={{ fontSize: 16, fontWeight: "700" }}>{Hooks.formatMoney(totalPayment)}</Text>
           </View>
-          <TouchableOpacity
-		  	onPress={() => this.chooseImage()}
-            style={{
-              padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-              alignItems: "center", marginTop: 40
-            }}>
-            <Text style={{ color: COLOR.white, fontSize: 18, fontWeight: "600" }}>Upload Bukti Pembayaran</Text>
-          </TouchableOpacity>
+		  {
+					(dataOrder.imageUrl == '') ? <TouchableOpacity
+						onPress={() => this.chooseImage()}
+						style={{
+							padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+							alignItems: "center", marginTop: 40
+						}}>
+						<Text style={{ color: COLOR.white, fontSize: 18, fontWeight: "600" }}>Upload Bukti Pembayaran</Text>
+					</TouchableOpacity>
+						: <View style={{
+							padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+							alignItems: "center", marginTop: 40
+						}}>
+							<Text style={{ color: COLOR.white, fontSize: 18, fontWeight: "600" }}>Bukti payment sedang di check</Text>
+						</View>
+		  }
+          
         </View>
         {/* <Text style={{fontWeight: 'bold'}}>Kode Order: {this.props.route.params.orderId}</Text>
         <Text>Silahkan bayar sebelum waktunya habis</Text>
