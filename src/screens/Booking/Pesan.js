@@ -51,6 +51,8 @@ uploadImagePayment(param){
 		link: 'order/update/'+this.state.dataOrder.orderId,
 		method: 'put',
 		data:{
+			statusOrder: 'prosess',
+			statusPayment: 'belum lunas',
 			imageUrl: param.imageUrl
 		}
 	}
@@ -125,7 +127,7 @@ uploadImage(val){
           borderRadius: 15, paddingVertical: 10, paddingHorizontal: 10
         }}>
           <View>
-            <Text style={{ marginTop: 5, fontSize: 18 }}>Batas waktu pembayaran yaitu 60 menit.{"\n"}
+            <Text style={{ marginTop: 5, fontSize: 18 }}>Batas waktu pembayaran yaitu {dataOrder.expired} menit.{"\n"}
              Transfer total pembayaran ke rekening berikut ini, lalu unggah bukti transfer.{"\n"}
              Tunggu konfirmasi dari Admin kami untuk mendapatkan kode booking.
            </Text>
