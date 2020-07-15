@@ -7,6 +7,9 @@ import { FAB } from 'react-native-paper';
 import * as Http from "../../helper/http";
 import * as Hooks from "../../helper/hooks";
 
+import AsyncStorage from '@react-native-community/async-storage';
+import userStore from '../../helper/storeUser';
+
 const { width, height } = Dimensions.get("screen")
 
 class Home extends Component {
@@ -17,6 +20,8 @@ class Home extends Component {
             populerDrink: [],
             populerMenu: [],
             currentIndex: 0,
+            userId: '',
+            token: '',
             imgDate: [
                 "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=751&q=80",
                 "https://images.unsplash.com/photo-1485182708500-e8f1f318ba72?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=785&q=80",
@@ -29,10 +34,38 @@ class Home extends Component {
         this.dragEnd = this.dragEnd.bind(this);
         this.onAnnotationEnd = this.onAnnotationEnd.bind(this)
     }
-    componentDidMount() {
+    componentDidMount = async() => {
+        const store = await userStore();
+        var user = await AsyncStorage.getItem("user");
+        var objUser = JSON.parse(user);
+        var token = await AsyncStorage.getItem("tokenDevice");
+        var objToken = JSON.parse(token);
+        this.setState({
+            userId: objUser.userId,
+            token: objToken.token
+        });
         this.carousel()
         this.getPopulerMenu();
         this.getPopulerDrink();
+        this.updateToken();
+    }
+
+    updateToken(){
+        let paramPost = {
+            link: 'user/update_token/'+this.state.userId,
+            method: 'put',
+            data: {
+                token: this.state.token
+            }
+        }
+
+        Http.post(paramPost)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     dotClick(index) {

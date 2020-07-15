@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, Dimensions, ActivityIndicator } from 'react-native';
 import { COLOR } from '../../components/common/color';
 import {fcmService} from "../../helper/fcmService";
+import AsyncStorage from '@react-native-community/async-storage';
 
 class SplashScreen extends Component {
 
@@ -16,6 +17,7 @@ class SplashScreen extends Component {
 
     onRegister(token){
         console.log('[Notification FCM] onRegister ', token);
+        AsyncStorage.setItem('tokenDevice', JSON.stringify({token: token}));
     }
 
     onNotification(notif){
