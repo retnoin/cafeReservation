@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -19,7 +19,7 @@ export default class HistoryOrder extends Component {
         };
     }
 
-    componentDidMount = async() => {
+    componentDidMount = async () => {
         var user = await AsyncStorage.getItem("user");
         var obj = JSON.parse(user);
         this.setState({
@@ -28,7 +28,7 @@ export default class HistoryOrder extends Component {
         this.listOrder();
     }
 
-    listOrder(){
+    listOrder() {
         let paramPost = {
             link: 'order/orderbyuser',
             method: 'post',
@@ -38,39 +38,47 @@ export default class HistoryOrder extends Component {
         }
 
         Http.post(paramPost)
-        .then((res) => {
-            this.setState({dataOrder: res.data});
-        })
-        .catch(err => {
-            alert('Ops: something error');
-        });
+            .then((res) => {
+                this.setState({ dataOrder: res.data });
+            })
+            .catch(err => {
+                alert('Ops: something error');
+            });
     }
 
-    _renderOrderList(){
+    _onRefresh() {
+        this.setState({refreshing: true});
+        setTimeout(() => {
+            this.listOrder();
+            this.setState({refreshing: false});
+        }, 100);
+    }
+
+    _renderOrderList() {
         let component = [];
-        let {dataOrder} = this.state;
+        let { dataOrder } = this.state;
         dataOrder.map((item, i) => {
             let total = parseInt(item.totalPrices) + 2000;
             let data = (
                 <View>
-                    <View style={{marginBottom: 10}}></View>
-                    <TouchableOpacity onPress={() => this.props.navigation.push('payment', {orderId: item.orderId})}>
-                    <View style={{ flexDirection: "row", backgroundColor: '#FFF' }}>
-                        <View style={{ paddingHorizontal: 10, padding: 15 }}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ paddingHorizontal: 10 }}>Order ID: {item.orderId}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ paddingHorizontal: 10 }}>Status Pembayaran : {item.statusOrder}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ paddingHorizontal: 10 }}>Status : {item.statusPayment}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ paddingHorizontal: 10 }}>Total : {Hooks.formatMoney(total)}</Text>
+                    <View style={{ marginBottom: 10 }}></View>
+                    <TouchableOpacity onPress={() => this.props.navigation.push('payment', { orderId: item.orderId })}>
+                        <View style={{ flexDirection: "row", backgroundColor: '#FFF' }}>
+                            <View style={{ paddingHorizontal: 10, padding: 15 }}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ paddingHorizontal: 10 }}>Order ID: {item.orderId}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ paddingHorizontal: 10 }}>Status Pembayaran : {item.statusOrder}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ paddingHorizontal: 10 }}>Status : {item.statusPayment}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ paddingHorizontal: 10 }}>Total : {Hooks.formatMoney(total)}</Text>
+                                </View>
                             </View>
                         </View>
-                    </View>
                     </TouchableOpacity>
                 </View>
             )
@@ -81,11 +89,17 @@ export default class HistoryOrder extends Component {
 
     render() {
         return (
-        <View style={{flex: 1, padding: 15}}>
-            <ScrollView>
-                {this._renderOrderList()}
-            </ScrollView>
-        </View>
+            <View style={{ flex: 1, padding: 15 }}>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                        />
+                    }>
+                    {this._renderOrderList()}
+                </ScrollView>
+            </View>
         );
     }
 }

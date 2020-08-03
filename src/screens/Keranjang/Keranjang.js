@@ -23,7 +23,7 @@ class Keranjang extends Component {
             valueQtyFood: 0,
             valueQtyDrink: 0,
             subTotalMeja: 0,
-            subTotalItem: {subTable: 0, subFood: 0, subDrink: 0},
+            subTotalItem: { subTable: 0, subFood: 0, subDrink: 0 },
             totalPayment: 0,
             ppn: 2000,
             userId: '',
@@ -35,7 +35,7 @@ class Keranjang extends Component {
         };
     }
 
-    componentDidMount = async() => {
+    componentDidMount = async () => {
         var user = await AsyncStorage.getItem("user");
         var obj = JSON.parse(user);
         this.setState({
@@ -45,18 +45,18 @@ class Keranjang extends Component {
     }
 
     //Save Order Item
-    saveOrderItem(param){
+    saveOrderItem(param) {
         let cartFood = this.props.cartFood;
         let cartDrink = this.props.cartDrink;
 
-        if(cartFood != ''){
+        if (cartFood != '') {
             this.saveOrderFood(param);
-        }else{
+        } else {
             this.saveOrderDrink(param);
         }
     }
 
-    saveOrder(total){
+    saveOrder(total) {
         var date = new Date();
         let th = date.getDate();
         let year = date.getFullYear();
@@ -64,7 +64,7 @@ class Keranjang extends Component {
         let hour = date.getHours();
         let minute = date.getMinutes();
         let time = hour + ':' + minute;
-        let dateOrder = year+'-'+month+'-'+th+' '+hour+':'+minute;
+        let dateOrder = year + '-' + month + '-' + th + ' ' + hour + ':' + minute;
 
         let reqParam = {
             link: 'order/add',
@@ -73,24 +73,39 @@ class Keranjang extends Component {
                 userId: this.state.userId,
                 note: this.state.note,
                 orderDate: dateOrder,
-                expired: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+                //expired: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+
+
+                expired: moment(new Date()).endOf(hour).set(1),
+
+
+                //expired: moment().endOf("minutes").format("30"),
+
+
+                // var start = new Date();
+                // start.setHours(0);
+                // var end = new Date();
+                // end.setHours(1);
+                // alert( start.toUTCString() + ':' + end.toUTCString() )
+
+
                 totalPrices: total
             }
         }
 
         Http.post(reqParam).then((res) => {
-            console.log('ORDER >>',res);
+            console.log('ORDER >>', res);
             let orderId = res.data.orderId;
             this.saveOrderFood(orderId);
             this.saveOrderTable(orderId);
             this.saveOrderDrink(orderId);
-            this.props.navigation.navigate('payment',{orderId: orderId});
+            this.props.navigation.navigate('payment', { orderId: orderId });
         }).catch((err) => {
             console.log('Error');
         });
     }
 
-    saveOrderTable(param){
+    saveOrderTable(param) {
         let table = this.props.table;
         table.map((item, i) => {
             let reqParam = {
@@ -112,10 +127,10 @@ class Keranjang extends Component {
         });
     };
 
-    saveOrderFood(param){
+    saveOrderFood(param) {
         let tes = [];
         let cartFood = this.props.cartFood;
-        if(cartFood != ''){
+        if (cartFood != '') {
             cartFood.map((item, i) => {
                 let reqParam = {
                     link: 'order/add_item',
@@ -135,14 +150,14 @@ class Keranjang extends Component {
                     console.log('Error');
                 });
             });
-        }else{
+        } else {
             console.log('Data Not Found');
         }
     }
 
-    saveOrderDrink(param){
+    saveOrderDrink(param) {
         let cartDrink = this.props.cartDrink;
-        if(cartDrink != ''){
+        if (cartDrink != '') {
             cartDrink.map((item, i) => {
                 let reqParam = {
                     link: 'order/add_item',
@@ -161,15 +176,15 @@ class Keranjang extends Component {
                     console.log('Error');
                 });
             });
-        }else{
+        } else {
             console.log('Data Not Found');
         }
     }
 
-    _removeTable(param){
+    _removeTable(param) {
         let tabel = this.props.table;
         tabel.map((item, i) => {
-            if(item.tableId == param){
+            if (item.tableId == param) {
                 tabel.splice(i, 1);
             }
         });
@@ -181,9 +196,9 @@ class Keranjang extends Component {
         }, 100);
     }
 
-    _renderOrderTable(){
+    _renderOrderTable() {
         let component = [];
-        if(this.props.table == ''){
+        if (this.props.table == '') {
             return console.log('empty data table');
         }
         let tes = 0;
@@ -223,9 +238,9 @@ class Keranjang extends Component {
                             </View>
                         </View>
                     </View>
-                    <View style={{flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end"}}>
+                    <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "flex-end" }}>
                         <TouchableOpacity onPress={() => this._removeTable(table.tableId)}>
-                            <View style={{flexDirection: "row"}}> 
+                            <View style={{ flexDirection: "row" }}>
                                 <MaterialIcons name="delete" color={COLOR.primary_color} size={20} />
                                 <Text>Hapus</Text>
                             </View>
@@ -247,9 +262,9 @@ class Keranjang extends Component {
         return component;
     }
 
-    _renderOrderFood(){
+    _renderOrderFood() {
         let component = [];
-        if(this.props.cartFood == ''){
+        if (this.props.cartFood == '') {
             return console.log('empty data order');
         }
         let subItem = 0;
@@ -260,9 +275,9 @@ class Keranjang extends Component {
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text>{item.name}</Text>
                     <Text style={{ marginBottom: 14 }}>{Hooks.formatMoney(item.price)}</Text>
-                    <NumericInput 
+                    <NumericInput
                         value={item.qty}
-                        onChange={qty => this.addQtyFood({foodId:item.foodId, qty: qty})}
+                        onChange={qty => this.addQtyFood({ foodId: item.foodId, qty: qty })}
                         totalWidth={100}
                         totalHeight={30}
                         valueType='real'
@@ -292,9 +307,9 @@ class Keranjang extends Component {
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text>{item.name}</Text>
                     <Text style={{ marginBottom: 14 }}>{Hooks.formatMoney(item.price)}</Text>
-                    <NumericInput 
+                    <NumericInput
                         value={item.qty}
-                        onChange={qty => this.addQtyDrink({drinkId:item.drinkId, qty: qty})}
+                        onChange={qty => this.addQtyDrink({ drinkId: item.drinkId, qty: qty })}
                         totalWidth={100}
                         totalHeight={30}
                         valueType='real'
@@ -310,11 +325,11 @@ class Keranjang extends Component {
         return component;
     }
 
-    addQtyDrink(val){
-        let drink = this.props.cartDrink;    
-        if(val.qty == 0){
+    addQtyDrink(val) {
+        let drink = this.props.cartDrink;
+        if (val.qty == 0) {
             drink.map((item, i) => {
-                if(item.drinkId == val.drinkId){
+                if (item.drinkId == val.drinkId) {
                     drink.splice(i, 1);
                 }
             })
@@ -323,9 +338,9 @@ class Keranjang extends Component {
                     timeDrink: true
                 });
             }, 100);
-        }else{
+        } else {
             drink.map((item, i) => {
-                if(item.drinkId == val.drinkId){
+                if (item.drinkId == val.drinkId) {
                     item.qty = val.qty;
                 }
             });
@@ -337,7 +352,7 @@ class Keranjang extends Component {
         }
     }
 
-    addQtyFood(val){
+    addQtyFood(val) {
         let food = this.props.cartFood;
         if (val.qty == 0) {
             food.map((item, i) => {
@@ -365,72 +380,72 @@ class Keranjang extends Component {
 
     }
 
-    _rendeDetailPayment(){
+    _rendeDetailPayment() {
         let total = 0;
-        let {subTotalItem} = this.state;
+        let { subTotalItem } = this.state;
         total = parseInt(subTotalItem.subFood) + parseInt(subTotalItem.subDrink) + parseInt(subTotalItem.subTable);
         let totalAll = total + 2000;
         let checkCart = false;
-        if(this.props.table != ""){
+        if (this.props.table != "") {
             checkCart = true;
         }
 
         let component = (
             <View>
-            <View style={{ flexDirection: "row" }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
-                    Detail Pembayaran
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
+                        Detail Pembayaran
                         </Text>
-            </View>
-            <View style={{
-                marginTop: 5, marginBottom: 10, width: "100%",
-                borderBottomWidth: 2, borderBottomColor: "#dedede"
-            }} />
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <Text style={{ fontSize: 16 }}>Sub Total</Text>
-                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(total)}</Text>
-            </View>
-            <View style={{
-                flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-                marginTop: 8
-            }}>
-                <Text style={{ fontSize: 16 }}>PPN</Text>
-                <Text style={{ fontSize: 16 }}>Rp 2.000</Text>
-            </View>
-            <View style={{
-                borderStyle: 'dotted',
-                borderWidth: 1,
-                borderRadius: 1,
-                marginTop: 8
-            }} />
-            <View style={{
-                flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-                marginTop: 8
-            }}>
-                <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
-                <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
-            </View>
-            {
-                (checkCart == true) ? 
-                    <TouchableOpacity
-                        onPress = {() => this.saveOrder(total)}
-                        style={{
-                            padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
-                            alignItems: "center", marginTop: 10
-                        }}>
-                        <Text style={{ color: COLOR.white }}>Pesan</Text>
-                    </TouchableOpacity>
-                : <Text></Text>        
-            }
-            
+                </View>
+                <View style={{
+                    marginTop: 5, marginBottom: 10, width: "100%",
+                    borderBottomWidth: 2, borderBottomColor: "#dedede"
+                }} />
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <Text style={{ fontSize: 16 }}>Sub Total</Text>
+                    <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(total)}</Text>
+                </View>
+                <View style={{
+                    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+                    marginTop: 8
+                }}>
+                    <Text style={{ fontSize: 16 }}>PPN</Text>
+                    <Text style={{ fontSize: 16 }}>Rp 2.000</Text>
+                </View>
+                <View style={{
+                    borderStyle: 'dotted',
+                    borderWidth: 1,
+                    borderRadius: 1,
+                    marginTop: 8
+                }} />
+                <View style={{
+                    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+                    marginTop: 8
+                }}>
+                    <Text style={{ fontSize: 16 }}>Total Pembayaran</Text>
+                    <Text style={{ fontSize: 16 }}>{Hooks.formatMoney(totalAll)}</Text>
+                </View>
+                {
+                    (checkCart == true) ?
+                        <TouchableOpacity
+                            onPress={() => this.saveOrder(total)}
+                            style={{
+                                padding: 10, backgroundColor: COLOR.primary_color, borderRadius: 10,
+                                alignItems: "center", marginTop: 10
+                            }}>
+                            <Text style={{ color: COLOR.white }}>Pesan</Text>
+                        </TouchableOpacity>
+                        : <Text></Text>
+                }
+
             </View>
         );
         console.log('BAKA A A >>', this.state.subTotalItem);
         return component;
     }
 
-    _renderNote(){
-        console.log('FOOD >> ',this.props.cartFood);
+    _renderNote() {
+        console.log('FOOD >> ', this.props.cartFood);
         let component = (
             <View>
                 <View style={{ flexDirection: "row" }}>
@@ -440,12 +455,12 @@ class Keranjang extends Component {
                 </View>
                 <View>
                     <TextInput
-                    multiline={true}
-                    numberOfLines={4}
-                    style={{borderWidth: 1, borderColor: '#CCC', paddingLeft: 15, paddingRight: 15, textAlignVertical: 'top'}}
-                    placeholder = "Note..."
-                    onChangeText={(text) => this.setState({ note: text })}
-                    value={this.state.note} />
+                        multiline={true}
+                        numberOfLines={4}
+                        style={{ borderWidth: 1, borderColor: '#CCC', paddingLeft: 15, paddingRight: 15, textAlignVertical: 'top' }}
+                        placeholder="Note..."
+                        onChangeText={(text) => this.setState({ note: text })}
+                        value={this.state.note} />
                 </View>
             </View>
         )
@@ -505,7 +520,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ addToFoodCart, addToDrinkCart, addTableToCart}, dispatch)
+    return bindActionCreators({ addToFoodCart, addToDrinkCart, addTableToCart }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Keranjang);

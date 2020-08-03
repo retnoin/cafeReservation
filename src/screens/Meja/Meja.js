@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Dimensions, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { COLOR } from '../../components/common/color';
@@ -53,45 +53,45 @@ class Meja extends Component {
         this.hideDatePicker();
     };
 
-    getListTable(){
+    getListTable() {
         let reqParam = {
             link: 'table/list',
             method: 'get',
             data: ''
         }
         Http.post(reqParam)
-        .then((res) => {
-            let data = res.data;
-            this.setState({ data: data});
-            // data.map((item, i) => {
-            // });
-        })
-        .catch((err) => {
+            .then((res) => {
+                let data = res.data;
+                this.setState({ data: data });
+                // data.map((item, i) => {
+                // });
+            })
+            .catch((err) => {
 
-        });
+            });
     }
 
     componentDidMount = async () => {
         var user = await AsyncStorage.getItem("user");
         var dataUser = JSON.parse(user);
-        this.setState({userId: dataUser.userId});
+        this.setState({ userId: dataUser.userId });
         this.getListTable();
         this.orderList();
     }
 
-    _selected(val, type){
-        if(type == 'meja'){
+    _selected(val, type) {
+        if (type == 'meja') {
             this.setState({
                 meja: val.item.numberOfTable,
                 tableId: val.item.tableId
             });
         }
 
-        if(type == 'people'){
+        if (type == 'people') {
             this.setState({
                 countPeople: val.i
             });
-            this.setState({orderTable: ''});
+            this.setState({ orderTable: '' });
             this.recommendTable(val.i);
         }
 
@@ -102,21 +102,21 @@ class Meja extends Component {
         }
     }
 
-    orderList(){
+    orderList() {
         let paramPost = {
             link: 'order/list_order_table',
             method: 'get'
         }
         Http.post(paramPost)
-        .then((res) => {
-            let data = res.data;
-            this.setState({dataOrder: data});
-        }).catch(err => {
-            alert('Ops: something error');
-        });
+            .then((res) => {
+                let data = res.data;
+                this.setState({ dataOrder: data });
+            }).catch(err => {
+                alert('Ops: something error');
+            });
     }
 
-    recommendTable(param){
+    recommendTable(param) {
         let paramPost = {
             link: 'table/recommend_table',
             method: 'post',
@@ -125,17 +125,17 @@ class Meja extends Component {
             }
         }
         Http.post(paramPost)
-        .then((res) => {
-            let data = res.data;
-            this.setState({dataTable: data});
-        }).catch(err => {
-            alert('Ops: something error');
-        });
+            .then((res) => {
+                let data = res.data;
+                this.setState({ dataTable: data });
+            }).catch(err => {
+                alert('Ops: something error');
+            });
     }
 
-    _saveToCart(){
+    _saveToCart() {
         let table = '';
-        if(this.state.orderTable.category == 'recommend'){
+        if (this.state.orderTable.category == 'recommend') {
             if (this.state.tanggal == 'Pilih Tanggal') {
                 return alert('Date field is required');
             }
@@ -147,23 +147,23 @@ class Meja extends Component {
                 countPeople: this.state.orderTable.manyOfSeats,
                 price: 50000
             }
-        }else{
-            let {meja, countPeople, timeOrder, tanggal, tableId} = this.state;
-            if(meja == ''){
+        } else {
+            let { meja, countPeople, timeOrder, tanggal, tableId } = this.state;
+            if (meja == '') {
                 return alert('Meja field is required');
             }
-            if(timeOrder == ''){
+            if (timeOrder == '') {
                 return alert('Time field is required');
             }
-            if(countPeople == ''){
+            if (countPeople == '') {
                 return alert('Total people field is required');
             }
-            if(tanggal == 'Pilih Tanggal'){
+            if (tanggal == 'Pilih Tanggal') {
                 return alert('Date field is required');
             }
-    
+
             table = {
-                meja : meja,
+                meja: meja,
                 tableId: tableId,
                 timeOrder: timeOrder,
                 tanggal: tanggal,
@@ -173,27 +173,27 @@ class Meja extends Component {
         }
         let checkBooking = false;
         this.state.dataOrder.map((item, i) => {
-            if(item.tableId == this.state.tableId && item.timeChoosen == this.state.timeOrder){
+            if (item.tableId == this.state.tableId && item.timeChoosen == this.state.timeOrder) {
                 checkBooking = true;
             }
         });
 
-        if(checkBooking == true){
+        if (checkBooking == true) {
             return alert('Maaf meja pada jam tersebut sudah di pesan silahkan pesan pada jam yang lain');
         }
         this.props.addTableToCart(table);
         this.props.navigation.push('Menu');
     }
 
-    _selected_table(param){
+    _selected_table(param) {
         param.category = 'recommend';
-        this.setState({ selectedTable: param.tableId, orderTable: param});
+        this.setState({ selectedTable: param.tableId, orderTable: param });
     }
 
     _renderNumberPeople() {
         let component = [];
         this.state.data.sort(function (a, b) { return a.manyOfSeats - b.manyOfSeats });
-        for(let i = 1; i <= 10; i++) {
+        for (let i = 1; i <= 10; i++) {
             let data = (
                 <View style={{ marginHorizontal: 5 }}>
                     <TouchableOpacity style={{
@@ -210,7 +210,7 @@ class Meja extends Component {
         return component;
     }
 
-    _renderTimeAvailable(){
+    _renderTimeAvailable() {
         let component = [];
         this.state.data.map((item, i) => {
             let timeOrder = item.avalaibleTime;
@@ -228,7 +228,7 @@ class Meja extends Component {
         return component;
     }
 
-    _renderTable(){
+    _renderTable() {
         let component = [];
         this.state.data.map((item, i) => {
             let data = (
@@ -247,15 +247,17 @@ class Meja extends Component {
         return component;
     }
 
-    _renderRecommendTables(){
+    _renderRecommendTables() {
         let component = [];
-        if(this.state.dataTable == ''){
+        if (this.state.dataTable == '') {
             component = (
                 <View>
-                    <View style={{ width: 100, height: 100, backgroundColor: "blue" }} />
+                    <Image
+                        source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
+                        style={{ width: 100, height: 100 }} />
                     <View style={{ paddingHorizontal: 10 }}>
-                        <Text style={{ fontSize: 16 }}>Jumlah kursi 4</Text>
                         <Text style={{ fontSize: 16, marginVertical: 5 }}>Meja {this.state.meja}</Text>
+                        <Text style={{ fontSize: 16 }}>Jumlah kursi </Text>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
@@ -281,39 +283,42 @@ class Meja extends Component {
                     </View>
                 </View>
             )
-        }else{
+        } else {
             this.state.dataTable.map((item, i) => {
                 let data = (
                     <View>
                         <TouchableOpacity onPress={() => this._selected_table(item)}>
-                        <View style={{ width: 100, height: 100, backgroundColor: "blue" }} />
-                        <View style={{ paddingHorizontal: 10, backgroundColor: this.state.selectedTable == item.tableId ? '#CCC' : '#FFF' }}>
-                            <Text style={{ fontSize: 16 }}>Jumlah kursi {item.manyOfSeats}</Text>
-                            <Text style={{ fontSize: 16, marginVertical: 5 }}>Meja {item.numberOfTable}</Text>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Image
+                                source={{ uri: 'https://thumbs.dreamstime.com/b/coming-soon-sign-door-hanging-plate-vector-coming-soon-sign-door-hanging-plate-150788650.jpg' }}
+                                style={{ width: 100, height: 100 }} />
+                            <View style={{ paddingHorizontal: 10, backgroundColor: this.state.selectedTable == item.tableId ? '#CCC' : '#FFF' }}>
+
+                                <Text style={{ fontSize: 16, marginVertical: 5 }}>Meja {item.numberOfTable}</Text>
+                                <Text style={{ fontSize: 16 }}>Jumlah kursi {item.manyOfSeats}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
-                                    <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
-                                        <Text>{item.avalaibleTime}</Text>
+                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <MaterialIcons name="access-time" color={COLOR.primary_color} size={20} />
+                                        <View style={{ paddingVertical: 1.5, paddingHorizontal: 10 }}>
+                                            <Text>{item.avalaibleTime}</Text>
+                                        </View>
                                     </View>
                                 </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Fontisto name="date" color={COLOR.primary_color} size={20} />
+                                    <Text style={{ paddingHorizontal: 10 }}>{this.state.tanggal}</Text>
+                                </View>
+                                <View style={{ marginTop: 5 }} />
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <MaterialIcons name="person-outline" color={COLOR.primary_color} size={25} />
+                                    <View style={{ marginHorizontal: 5 }} />
+                                    <Text
+                                        style={{
+                                            paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
+                                            borderRadius: 5
+                                        }}>{this.state.countPeople}</Text>
+                                </View>
                             </View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Fontisto name="date" color={COLOR.primary_color} size={20} />
-                                <Text style={{ paddingHorizontal: 10 }}>{this.state.tanggal}</Text>
-                            </View>
-                            <View style={{ marginTop: 5 }} />
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <MaterialIcons name="person-outline" color={COLOR.primary_color} size={25} />
-                                <View style={{ marginHorizontal: 5 }} />
-                                <Text
-                                    style={{
-                                        paddingHorizontal: 10, borderWidth: 2, borderColor: "#dedede",
-                                        borderRadius: 5
-                                    }}>{this.state.countPeople}</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
                     </View>
                 )
                 component.push(data);
@@ -337,7 +342,7 @@ class Meja extends Component {
                             </ScrollView>
                         </View>
 
-                        <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
+                        {/* <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
                         <Text style={{ fontSize: 16, fontWeight: "bold" }}>Pilih Meja</Text>
                         <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
                         <View style={{ flexDirection: "row" }}>
@@ -346,7 +351,7 @@ class Meja extends Component {
                                 horizontal>
                                 {this._renderTable()}
                             </ScrollView>
-                        </View>
+                        </View> */}
 
                         <View style={{
                             borderBottomWidth: 2, borderBottomColor: "#dedede",
@@ -388,9 +393,9 @@ class Meja extends Component {
                         <View style={{ borderBottomWidth: 2, borderBottomColor: "#dedede", marginTop: 5, marginBottom: 15 }} />
                         <ScrollView showsHorizontalScrollIndicator={false}
                             horizontal>
-                        <View style={{ flexDirection: "row" }}>
-                            {this._renderRecommendTables()}
-                        </View>
+                            <View style={{ flexDirection: "row" }}>
+                                {this._renderRecommendTables()}
+                            </View>
                         </ScrollView>
                         <View style={{ paddingVertical: 10 }} />
                         <View style={{
